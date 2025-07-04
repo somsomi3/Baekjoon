@@ -1,44 +1,34 @@
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        int N = sc.nextInt();
-        System.out.println(countHan(N));
+        
+        int N = sc.nextInt();  // 입력값
+        
+        System.out.println(han(N));  // 결과 출력
     }
 
-    static int countHan(int N) {
-        if (N < 100) return N;
+    public static int han(int N) {
+        if (N < 100) {
+            // 1~99는 모두 한수
+            return N;
+        }
 
-        int count = 99;
+        int count = 99; // 1~99는 모두 한수라서 기본 99로 시작
 
         for (int i = 100; i <= N; i++) {
-            if (isHan(i)) count++;
-        }
+            int hun = i / 100;          // 백의 자리
+            int ten = (i / 10) % 10;    // 십의 자리
+            int one = i % 10;           // 일의 자리
 
-        return count;
-    }
-
-    static boolean isHan(int num) {
-        String s = Integer.toString(num);
-        int len = s.length();
-        int[] digits = new int[len];
-
-        // 숫자를 각 자리 배열에 저장
-        for (int i = 0; i < len; i++) {
-            digits[i] = s.charAt(i) - '0';
-        }
-
-        int diff = digits[1] - digits[0];
-
-        // 인접 자리 차이가 모두 같아야 함
-        for (int i = 1; i < len - 1; i++) {
-            if (digits[i + 1] - digits[i] != diff) {
-                return false;
+            if ((hun - ten) == (ten - one)) {
+                // 등차수열 만족하면 한수!
+                count++;
             }
         }
 
-        return true;
+        return count;
     }
 }
