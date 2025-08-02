@@ -1,52 +1,48 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static class Problem implements Comparable<Problem> {
-        int deadline;
-        int ramen;
-
-        public Problem(int deadline, int ramen) {
-            this.deadline = deadline;
-            this.ramen = ramen;
-        }
-
-        @Override
-        public int compareTo(Problem o) {
-            return this.deadline - o.deadline; // 데드라인 오름차순 정렬
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+        int problemCount = Integer.parseInt(br.readLine());
 
-        Problem[] problems = new Problem[N];
-        for (int i = 0; i < N; i++) {
+        // 문제를 데드라인 오름차순, 같은 데드라인이면 라면 수 내림차순으로 정렬
+        PriorityQueue<int[]> problemQueue = new PriorityQueue<>((a, b) -> {
+            if (a[0] == b[0]) return b[1] - a[1]; // 라면 수 내림차순
+            return a[0] - b[0]; // 데드라인 오름차순
+        });
+
+        // 문제 입력 받기
+        for (int i = 0; i < problemCount; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int d = Integer.parseInt(st.nextToken());
-            int r = Integer.parseInt(st.nextToken());
-            problems[i] = new Problem(d, r);
+            int deadline = Integer.parseInt(st.nextToken());
+            int ramenCount = Integer.parseInt(st.nextToken());
+            problemQueue.offer(new int[]{deadline, ramenCount});
         }
 
-        Arrays.sort(problems); // 데드라인 기준 오름차순 정렬
+        // 선택한 문제의 라면 수를 저장할 최소 힙 (가장 적은 라면 수 제거용)
+        PriorityQueue<Integer> selectedRamenQueue = new PriorityQueue<>();
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>(); // 최소힙
+        // 문제를 하나씩 처리하며 최적 선택
+        while (!problemQueue.isEmpty()) {
+            int[] currentProblem = problemQueue.poll();
+            int deadline = currentProblem[0];
+            int ramenCount = currentProblem[1];
 
-        for (Problem p : problems) {
-            pq.offer(p.ramen); // 현재 컵라면 수를 큐에 추가
-
-            // 데드라인보다 선택한 문제 수가 많으면, 최소 라면 제거
-            if (pq.size() > p.deadline) {
-                pq.poll();
+            selectedRamenQueue.offer(ramenCount);
+            if (selectedRamenQueue.size() > deadline) {
+                selectedRamenQueue.poll(); // 가장 적은 라면 수 제거
             }
         }
 
-        long total = 0;
-        while (!pq.isEmpty()) {
-            total += pq.poll();
+        // 총 라면 수 계산
+        int totalRamen = 0;
+        for (int ramen : selectedRamenQueue) {
+            totalRamen += ramen;
         }
 
-        System.out.println(total);
+        System.out.println(totalRamen);
     }
 }
