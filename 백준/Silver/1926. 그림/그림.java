@@ -10,37 +10,34 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+
+        N = readInt(br);
+        M = readInt(br);
 
         map = new boolean[N][M];
         visited = new boolean[N][M];
 
-        // 입력 최적화: charAt + '0'
         for (int i = 0; i < N; i++) {
-            String line = br.readLine();
-            for (int j = 0; j < M; j++) {
-                map[i][j] = (line.charAt(j * 2) == '1'); // 공백 포함 입력 대응
+            int j = 0;
+            while (j < M) {
+                int c = br.read();
+                if (c == ' ' || c == '\n') continue;
+                map[i][j++] = (c == '1');
             }
         }
 
-        int count = 0;
-        int maxArea = 0;
-
+        int count = 0, maxArea = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (!visited[i][j] && map[i][j]) {
                     count++;
-                    int area = bfs(i, j);
-                    maxArea = Math.max(maxArea, area);
+                    maxArea = Math.max(maxArea, bfs(i, j));
                 }
             }
         }
 
-        sb.append(count).append('\n').append(maxArea);
-        System.out.println(sb);
+        System.out.println(count);
+        System.out.println(maxArea);
     }
 
     static int bfs(int x, int y) {
@@ -51,21 +48,25 @@ public class Main {
 
         while (!q.isEmpty()) {
             int[] cur = q.poll();
-            int cx = cur[0];
-            int cy = cur[1];
-
-            for (int i = 0; i < 4; i++) {
-                int nx = cx + dx[i];
-                int ny = cy + dy[i];
+            int cx = cur[0], cy = cur[1];
+            for (int d = 0; d < 4; d++) {
+                int nx = cx + dx[d], ny = cy + dy[d];
                 if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
                 if (visited[nx][ny] || !map[nx][ny]) continue;
-
                 visited[nx][ny] = true;
                 q.offer(new int[]{nx, ny});
                 area++;
             }
         }
-
         return area;
+    }
+
+    static int readInt(BufferedReader br) throws IOException {
+        int val = 0, c;
+        while ((c = br.read()) <= ' ') ; // skip space/newline
+        do {
+            val = val * 10 + (c - '0');
+        } while ((c = br.read()) >= '0' && c <= '9');
+        return val;
     }
 }
