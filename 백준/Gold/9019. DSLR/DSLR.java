@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.*;
 
@@ -6,18 +5,16 @@ public class Main {
     static int T;
     static int[] parent = new int[10000];  // 경로 추적용
     static char[] how = new char[10000];   // 명령 기록
-    static int[] visited = new int[10000]; // 방문 체크용 (타임스탬프 방식)
+    static int[] visited = new int[10000]; // 방문 체크 (타임스탬프 방식)
     static int visitId = 1; // 테스트케이스별로 증가
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws Exception {
         StringBuilder output = new StringBuilder();
-        T = Integer.parseInt(br.readLine());
+        T = read();
 
         while (T-- > 0) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int start = Integer.parseInt(st.nextToken());
-            int target = Integer.parseInt(st.nextToken());
+            int start = read();
+            int target = read();
 
             bfs(start, target);
 
@@ -27,7 +24,7 @@ public class Main {
                 cmd.append(how[cur]);
             }
             output.append(cmd.reverse()).append("\n");
-            visitId++; // 다음 테스트 케이스로 넘어가면 방문배열 초기화 없이 새 ID 사용
+            visitId++;
         }
         System.out.print(output);
     }
@@ -39,7 +36,6 @@ public class Main {
 
         while (!q.isEmpty()) {
             int num = q.poll();
-            if (num == target) return;
 
             // D
             int d = (num * 2) % 10000;
@@ -47,6 +43,7 @@ public class Main {
                 visited[d] = visitId;
                 parent[d] = num;
                 how[d] = 'D';
+                if (d == target) return; // 즉시 종료
                 q.offer(d);
             }
 
@@ -56,6 +53,7 @@ public class Main {
                 visited[s] = visitId;
                 parent[s] = num;
                 how[s] = 'S';
+                if (s == target) return;
                 q.offer(s);
             }
 
@@ -65,6 +63,7 @@ public class Main {
                 visited[l] = visitId;
                 parent[l] = num;
                 how[l] = 'L';
+                if (l == target) return;
                 q.offer(l);
             }
 
@@ -74,8 +73,18 @@ public class Main {
                 visited[r] = visitId;
                 parent[r] = num;
                 how[r] = 'R';
+                if (r == target) return;
                 q.offer(r);
             }
         }
+    }
+
+    // 빠른 입력
+    static int read() throws IOException {
+        int c, n = System.in.read() & 15;
+        while ((c = System.in.read()) > 32) {
+            n = (n << 3) + (n << 1) + (c & 15);
+        }
+        return n;
     }
 }
