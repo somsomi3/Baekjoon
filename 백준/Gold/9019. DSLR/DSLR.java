@@ -1,90 +1,99 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
-    static int T;
-    static int[] parent = new int[10000];  // 경로 추적용
-    static char[] how = new char[10000];   // 명령 기록
-    static int[] visited = new int[10000]; // 방문 체크 (타임스탬프 방식)
-    static int visitId = 1; // 테스트케이스별로 증가
+    static final int MAX = 10000;
+    static final int QSIZE = 1 << 14; // 큐 크기 (16384)
+    static final int MASK = QSIZE - 1; // 인덱스 wrap용 비트마스크
+    static int[] queue = new int[QSIZE];
+    static int head, tail;
+
+    static int[] parent = new int[MAX];
+    static char[] how = new char[MAX];
+
+    static StringBuilder output = new StringBuilder();
 
     public static void main(String[] args) throws Exception {
-        StringBuilder output = new StringBuilder();
-        T = read();
-
+        int T = read();
         while (T-- > 0) {
             int start = read();
             int target = read();
-
             bfs(start, target);
 
             // 경로 복원
-            StringBuilder cmd = new StringBuilder();
+            char[] buf = new char[15];
+            int idx = 15;
             for (int cur = target; cur != start; cur = parent[cur]) {
-                cmd.append(how[cur]);
+                buf[--idx] = how[cur];
             }
-            output.append(cmd.reverse()).append("\n");
-            visitId++;
+            output.append(buf, idx, 15 - idx).append('\n');
         }
         System.out.print(output);
     }
 
     static void bfs(int start, int target) {
-        Queue<Integer> q = new ArrayDeque<>();
-        q.offer(start);
-        visited[start] = visitId;
+        // 초기화
+        head = tail = 0;
+        for (int i = 0; i < MAX; i++) parent[i] = -1;
 
-        while (!q.isEmpty()) {
-            int num = q.poll();
+        parent[start] = start;
+        enqueue(start);
+
+        while (head != tail) {
+            int num = dequeue();
 
             // D
             int d = (num * 2) % 10000;
-            if (visited[d] != visitId) {
-                visited[d] = visitId;
+            if (parent[d] == -1) {
                 parent[d] = num;
                 how[d] = 'D';
-                if (d == target) return; // 즉시 종료
-                q.offer(d);
+                if (d == target) return;
+                enqueue(d);
             }
 
             // S
             int s = (num == 0) ? 9999 : num - 1;
-            if (visited[s] != visitId) {
-                visited[s] = visitId;
+            if (parent[s] == -1) {
                 parent[s] = num;
                 how[s] = 'S';
                 if (s == target) return;
-                q.offer(s);
+                enqueue(s);
             }
 
             // L
             int l = (num % 1000) * 10 + (num / 1000);
-            if (visited[l] != visitId) {
-                visited[l] = visitId;
+            if (parent[l] == -1) {
                 parent[l] = num;
                 how[l] = 'L';
                 if (l == target) return;
-                q.offer(l);
+                enqueue(l);
             }
 
             // R
             int r = (num % 10) * 1000 + (num / 10);
-            if (visited[r] != visitId) {
-                visited[r] = visitId;
+            if (parent[r] == -1) {
                 parent[r] = num;
                 how[r] = 'R';
                 if (r == target) return;
-                q.offer(r);
+                enqueue(r);
             }
         }
     }
 
+    // 원형 큐 enqueue
+    static void enqueue(int x) {
+        queue[head = (head + 1) & MASK] = x;
+    }
+
+    // 원형 큐 dequeue
+    static int dequeue() {
+        return queue[tail = (tail + 1) & MASK];
+    }
+
     // 빠른 입력
-    static int read() throws IOException {
+    static int read() throws Exception {
         int c, n = System.in.read() & 15;
-        while ((c = System.in.read()) > 32) {
+        while ((c = System.in.read()) > 32)
             n = (n << 3) + (n << 1) + (c & 15);
-        }
         return n;
     }
 }
