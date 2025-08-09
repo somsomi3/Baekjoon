@@ -1,66 +1,100 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
-    static class Node {
-        int x, y, b, d;
-        Node(int x, int y, int b, int d) {
-            this.x = x; this.y = y; this.b = b; this.d = d;
+
+
+    static int readInt() throws Exception {
+        int c, n = 0;
+        while ((c = System.in.read()) <= 32) {
+            if (c == -1) return -1;
+        }
+        do {
+            n = n * 10 + (c - '0');
+            c = System.in.read();
+        } while (c > 32);
+        return n;
+    }
+
+    static void readGrid(byte[][] map, int N, int M) throws Exception {
+        for (int i = 0; i < N; i++) {
+            int j = 0;
+            while (j < M) {
+                int c = System.in.read();
+                if (c == '0' || c == '1') {
+                    map[i][j++] = (byte) (c - '0');
+                } else if (c == -1) {
+                    break;
+                }
+            }
         }
     }
 
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        final int N = readInt();
+        final int M = readInt();
+        final int K = readInt();
 
-        int[][] map = new int[N][M];
-        for (int i = 0; i < N; i++) {
-            char[] row = br.readLine().toCharArray();
-            for (int j = 0; j < M; j++) {
-                map[i][j] = row[j] - '0';
-            }
-        }
+        byte[][] map = new byte[N][M];
+        readGrid(map, N, M);
 
-        System.out.println(bfs(map, N, M, K));
-    }
-
-    static int bfs(int[][] map, int N, int M, int K) {
-        // visited[x][y][b] : (x,y)에 벽 b개 부순 상태로 방문했는가
         boolean[][][] visited = new boolean[N][M][K + 1];
-        int[] dx = {1, -1, 0, 0};
-        int[] dy = {0, 0, 1, -1};
 
-        ArrayDeque<Node> q = new ArrayDeque<>();
-        q.add(new Node(0, 0, 0, 1));
+        final int CAP = N * M * (K + 1) + 5;
+        int[] qx = new int[CAP];
+        int[] qy = new int[CAP];
+        int[] qb = new int[CAP];
+        int head = 0, tail = 0;
+
+        // helpers
+        final int[] dx = {1, -1, 0, 0};
+        final int[] dy = {0, 0, 1, -1};
+
+        // enqueue start (0,0,0)
+        qx[tail] = 0; qy[tail] = 0; qb[tail] = 0;
+        if (++tail == CAP) tail = 0;
         visited[0][0][0] = true;
 
-        while (!q.isEmpty()) {
-            Node cur = q.poll();
+        int steps = 1; // 시작칸 포함
 
-            if (cur.x == N - 1 && cur.y == M - 1) return cur.d;
+        while (head != tail) {
+            int qsz = tail - head;
+            if (qsz < 0) qsz += CAP;
 
-            for (int dir = 0; dir < 4; dir++) {
-                int nx = cur.x + dx[dir];
-                int ny = cur.y + dy[dir];
-                if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+            for (int s = 0; s < qsz; s++) {
+                // dequeue
+                int x = qx[head];
+                int y = qy[head];
+                int b = qb[head];
+                if (++head == CAP) head = 0;
 
-                // 빈칸: 부순 횟수 그대로
-                if (map[nx][ny] == 0) {
-                    if (!visited[nx][ny][cur.b]) {
-                        visited[nx][ny][cur.b] = true;
-                        q.add(new Node(nx, ny, cur.b, cur.d + 1));
-                    }
-                } else { // 벽: 아직 더 부술 수 있으면 +1
-                    if (cur.b < K && !visited[nx][ny][cur.b + 1]) {
-                        visited[nx][ny][cur.b + 1] = true;
-                        q.add(new Node(nx, ny, cur.b + 1, cur.d + 1));
+                // 도착
+                if (x == N - 1 && y == M - 1) {
+                    System.out.println(steps);
+                    return;
+                }
+
+                for (int d = 0; d < 4; d++) {
+                    int nx = x + dx[d], ny = y + dy[d];
+                    if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+
+                    if (map[nx][ny] == 0) {
+                        if (!visited[nx][ny][b]) {
+                            visited[nx][ny][b] = true;
+                            qx[tail] = nx; qy[tail] = ny; qb[tail] = b;
+                            if (++tail == CAP) tail = 0;
+                        }
+                    } else { // 벽
+                        if (b < K && !visited[nx][ny][b + 1]) {
+                            visited[nx][ny][b + 1] = true;
+                            qx[tail] = nx; qy[tail] = ny; qb[tail] = b + 1;
+                            if (++tail == CAP) tail = 0;
+                        }
                     }
                 }
             }
+            steps++; // 다음 레벨(거리 +1)
         }
-        return -1;
+
+        System.out.println(-1);
     }
 }
