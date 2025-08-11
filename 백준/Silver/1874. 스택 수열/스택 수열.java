@@ -1,40 +1,49 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+    static final int BUF = 1 << 16;
+    static final byte[] buffer = new byte[BUF];
+    static int idx = 0, size = 0;
+    static int read() throws IOException {
+        if (idx >= size) {
+            size = System.in.read(buffer);
+            idx = 0;
+            if (size < 0) return -1;
+        }
+        return buffer[idx++];
+    }
+    static int readInt() throws IOException {
+        int c, x = 0, sign = 1;
+        do { c = read(); } while (c <= 32);
+        if (c == '-') { sign = -1; c = read(); }
+        while (c > 32) { x = x * 10 + (c - '0'); c = read(); }
+        return x * sign;
+    }
 
-        int n = Integer.parseInt(br.readLine());
-        Stack<Integer> stack = new Stack<>();
-        int cur = 1; // 현재 push할 숫자
-        boolean isPossible = true;
+    public static void main(String[] args) throws Exception {
+        int n = readInt();
+        int[] stack = new int[n];
+        int top = 0;
+        int next = 1;                  // 다음에 push 할 수
+        StringBuilder sb = new StringBuilder(n * 2 + 10);
 
         for (int i = 0; i < n; i++) {
-            int target = Integer.parseInt(br.readLine());
+            int target = readInt();
 
-            // target까지 push
-            while (cur <= target) {
-                stack.push(cur++);
-                sb.append("+\n");
+            // target에 도달할 때까지 1씩 증가시키며 push
+            while (next <= target) {
+                stack[top++] = next++;
+                sb.append('+').append('\n');
             }
 
-            // 스택의 top이 target과 같다면 pop
-            if (stack.peek() == target) {
-                stack.pop();
-                sb.append("-\n");
-            } else {
-                // 만들 수 없는 수열
-                isPossible = false;
-                break;
+            // 스택의 top이 target이면 pop, 아니면 불가능
+            if (top == 0 || stack[top - 1] != target) {
+                System.out.print("NO");
+                return;
             }
+            top--;
+            sb.append('-').append('\n');
         }
-
-        if (isPossible) {
-            System.out.print(sb);
-        } else {
-            System.out.println("NO");
-        }
+        System.out.print(sb);
     }
 }
