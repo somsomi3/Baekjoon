@@ -1,49 +1,55 @@
 import java.io.*;
 
 public class Main {
-    static final int BUF = 1 << 16;
-    static final byte[] buffer = new byte[BUF];
-    static int idx = 0, size = 0;
+    static final int BSZ = 1 << 16;
+    static final byte[] buf = new byte[BSZ];
+    static int bi = 0, bn = 0;
     static int read() throws IOException {
-        if (idx >= size) {
-            size = System.in.read(buffer);
-            idx = 0;
-            if (size < 0) return -1;
+        if (bi >= bn) {
+            bn = System.in.read(buf);
+            bi = 0;
+            if (bn < 0) return -1;
         }
-        return buffer[idx++];
+        return buf[bi++];
     }
     static int readInt() throws IOException {
-        int c, x = 0, sign = 1;
+        int c, x = 0, sgn = 1;
         do { c = read(); } while (c <= 32);
-        if (c == '-') { sign = -1; c = read(); }
+        if (c == '-') { sgn = -1; c = read(); }
         while (c > 32) { x = x * 10 + (c - '0'); c = read(); }
-        return x * sign;
+        return x * sgn;
     }
 
     public static void main(String[] args) throws Exception {
         int n = readInt();
-        int[] stack = new int[n];
+        int[] st = new int[n];
         int top = 0;
-        int next = 1;                  // 다음에 push 할 수
-        StringBuilder sb = new StringBuilder(n * 2 + 10);
+        int next = 1;
+
+        // 출력은 2N줄 확정 -> 각 줄 2문자(기호 + '\n') => 4N char
+        char[] out = new char[4 * n];
+        int oi = 0;
 
         for (int i = 0; i < n; i++) {
             int target = readInt();
 
-            // target에 도달할 때까지 1씩 증가시키며 push
             while (next <= target) {
-                stack[top++] = next++;
-                sb.append('+').append('\n');
+                st[top++] = next++;
+                out[oi++] = '+'; out[oi++] = '\n';
             }
 
-            // 스택의 top이 target이면 pop, 아니면 불가능
-            if (top == 0 || stack[top - 1] != target) {
+            // top 확인
+            if (top == 0 || st[top - 1] != target) {
                 System.out.print("NO");
                 return;
             }
             top--;
-            sb.append('-').append('\n');
+            out[oi++] = '-'; out[oi++] = '\n';
         }
-        System.out.print(sb);
+
+        // 한 번에 출력
+        OutputStreamWriter w = new OutputStreamWriter(System.out);
+        w.write(out, 0, oi);
+        w.flush();
     }
 }
