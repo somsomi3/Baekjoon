@@ -1,74 +1,84 @@
 import java.io.*;
+import java.util.Arrays;
 
 public class Main {
-    static int readInt() throws IOException {
-        int c, n = 0;
-        boolean neg = false;
-        while ((c = System.in.read()) <= 32) ; 
-        if (c == '-') { neg = true; c = System.in.read(); }
-        do {
-            n = n * 10 + (c - '0');
-        } while ((c = System.in.read()) > 32);
-        return neg ? -n : n;
+    static final class FastScanner {
+        private final InputStream in;
+        private final byte[] buf = new byte[1 << 16];
+        private int ptr = 0, len = 0;
+        FastScanner(InputStream is) { this.in = is; }
+        private int read() throws IOException {
+            if (ptr >= len) {
+                len = in.read(buf);
+                ptr = 0;
+                if (len <= 0) return -1;
+            }
+            return buf[ptr++];
+        }
+        int nextInt() throws IOException {
+            int c, s = 1, n = 0;
+            do { c = read(); } while (c <= 32);
+            if (c == '-') { s = -1; c = read(); }
+            while (c > 32) { n = n * 10 + (c - '0'); c = read(); }
+            return n * s;
+        }
     }
 
     public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner(System.in);
         StringBuilder out = new StringBuilder();
-        int T = readInt();
+
+        int T = fs.nextInt();
+        int[] freq = new int[10];
 
         while (T-- > 0) {
-            int n = readInt();
-            int m = readInt();
+            int n = fs.nextInt();
+            int m = fs.nextInt();
 
-            // 원형 큐
-            int cap = 2 * n + 5;
-            int[] q = new int[cap];
+            // 원형 큐: cap = n
+            int[] q = new int[n];
             int head = 0, tail = 0, size = 0;
 
-            // 중요도 빈도
-            int[] freq = new int[10];
+            Arrays.fill(freq, 0);
+            int currentMax = 0;
 
             for (int i = 0; i < n; i++) {
-                int p = readInt();
+                int p = fs.nextInt();
                 q[tail] = p;
-                tail = (tail + 1) % cap;
+                tail++; if (tail == n) tail = 0;
                 size++;
                 freq[p]++;
+                if (p > currentMax) currentMax = p;
             }
-
-            // 현재 최고 중요도
-            int currentMax = 9;
-            while (currentMax > 0 && freq[currentMax] == 0) currentMax--;
 
             int printed = 0;
 
             while (size > 0) {
                 int p = q[head];
-                head = (head + 1) % cap;
+                head++; if (head == n) head = 0;
                 size--;
 
-                if (p == currentMax) { // 인쇄
+                if (p == currentMax) {    
                     printed++;
                     freq[p]--;
-
-                    if (m == 0) {
+                    if (m == 0) {            
                         out.append(printed).append('\n');
                         break;
-                    } else {
-                        m--;
                     }
+                    m--;                   
 
                     if (freq[currentMax] == 0) {
                         while (currentMax > 0 && freq[currentMax] == 0) currentMax--;
                     }
-                } else { // 뒤로 보내기
+                } else {                  
                     q[tail] = p;
-                    tail = (tail + 1) % cap;
+                    tail++; if (tail == n) tail = 0;
                     size++;
                     m = (m == 0 ? size - 1 : m - 1);
                 }
             }
         }
+
         System.out.print(out.toString());
     }
 }
