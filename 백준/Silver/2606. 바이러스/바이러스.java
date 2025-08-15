@@ -1,41 +1,42 @@
-
-
 import java.io.*;
-import java.util.*;
 
 public class Main {
-    static List<Integer>[] graph;
+    static int N, M, count;
+    static boolean[][] graph;
     static boolean[] visited;
-    static int count = 0;
-    
-	public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine()); // 컴퓨터 수
-        int m = Integer.parseInt(br.readLine()); // 연결 수
-		
-        graph = new ArrayList[n + 1];
-        visited = new boolean[n + 1];
-        for (int i = 1; i <= n; i++) {
-            graph[i] = new ArrayList<>();
+
+    // 빠른 입력
+    static int read() throws IOException {
+        int c, n = System.in.read() & 15; // 첫 숫자
+        while ((c = System.in.read()) > 32) // 공백 전까지
+            n = (n << 3) + (n << 1) + (c & 15); // n*10 + digit
+        return n;
+    }
+
+    static void dfs(int node) {
+        visited[node] = true;
+        count++;
+        for (int i = 1; i <= N; i++) {
+            if (graph[node][i] && !visited[i]) {
+                dfs(i);
+            }
         }
-        
-        for (int i =0; i<m; i++) {
-        	StringTokenizer st = new StringTokenizer(br.readLine());
-        	int a = Integer.parseInt(st.nextToken());
-        	int b = Integer.parseInt(st.nextToken());
-        	graph[a].add(b);//양방향
-        	graph[b].add(a);
+    }
+
+    public static void main(String[] args) throws IOException {
+        N = read();
+        M = read();
+
+        graph = new boolean[N + 1][N + 1];
+        visited = new boolean[N + 1];
+
+        for (int i = 0; i < M; i++) {
+            int a = read();
+            int b = read();
+            graph[a][b] = graph[b][a] = true;
         }
-        dfs(1);
-        System.out.println(count - 1); // 1번 컴퓨터 제외
-	}
-	static void dfs(int i) {
-		visited[i]= true;
-		count++;
-        for (int next : graph[i]) {
-        	if(!visited[next]) {
-        		dfs(next);
-		}
-        }
-	}
+
+        dfs(1); // 1번 컴퓨터에서 시작
+        System.out.println(count - 1); // 자기 자신 제외
+    }
 }
