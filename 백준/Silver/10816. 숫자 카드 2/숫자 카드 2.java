@@ -3,24 +3,27 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        final int OFFSET = 10_000_000;
+        final int SIZE = 20_000_001;
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         int N = Integer.parseInt(br.readLine());
-        Map<Integer, Integer> cardCount = new HashMap<>();
+        int[] count = new int[SIZE]; // -10_000_000 ~ 10_000_000
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             int num = Integer.parseInt(st.nextToken());
-            cardCount.put(num, cardCount.getOrDefault(num, 0) + 1);
+            count[num + OFFSET]++;
         }
 
         int M = Integer.parseInt(br.readLine());
-
         st = new StringTokenizer(br.readLine());
+
         for (int i = 0; i < M; i++) {
             int query = Integer.parseInt(st.nextToken());
-            sb.append(cardCount.getOrDefault(query, 0)).append(" ");
+            sb.append(count[query + OFFSET]).append(' ');
         }
 
         System.out.println(sb);
