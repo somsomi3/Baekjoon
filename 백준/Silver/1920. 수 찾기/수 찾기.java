@@ -36,26 +36,18 @@ public class Main {
     public static void main(String[] args) throws Exception {
         StringBuilder sb = new StringBuilder();
         int N = nextInt();
-        int[] arr = new int[N];
-        for (int i = 0; i < N; i++) arr[i] = nextInt();
-        Arrays.sort(arr);
+        HashSet<Integer> set = new HashSet<>(N * 2);
+
+        for (int i = 0; i < N; i++) {
+            set.add(nextInt());
+        }
+
         int M = nextInt();
         for (int i = 0; i < M; i++) {
             int x = nextInt();
-            sb.append(binSearch(arr, x) ? 1 : 0).append('\n');
+            sb.append(set.contains(x) ? 1 : 0).append('\n');
         }
-        System.out.print(sb);
-    }
 
-    static boolean binSearch(int[] a, int key) {
-        int l = 0, r = a.length - 1;
-        while (l <= r) {
-            int mid = (l + r) >>> 1;
-            int v = a[mid];
-            if (v == key) return true;
-            if (v < key) l = mid + 1;
-            else r = mid - 1;
-        }
-        return false;
+        System.out.print(sb);
     }
 }
