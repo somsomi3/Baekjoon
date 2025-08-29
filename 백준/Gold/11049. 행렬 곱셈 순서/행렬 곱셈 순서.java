@@ -1,48 +1,41 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
+    static int[][] dp;
+    static int[] p;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine()); // 행렬 개수
-        int[][] size = new int[N][2]; // 각 행렬의 (행, 열)
+        
+        int N = Integer.parseInt(br.readLine());
+        int[][] matrix = new int[N][2]; // 각 행렬의 크기 저장
+        p = new int[N + 1];             // 행렬 곱셈용 차원 배열 (p[0]~p[N])
 
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            size[i][0] = Integer.parseInt(st.nextToken()); // 행
-            size[i][1] = Integer.parseInt(st.nextToken()); // 열
+            String[] input = br.readLine().split(" ");
+            matrix[i][0] = Integer.parseInt(input[0]);
+            matrix[i][1] = Integer.parseInt(input[1]);
         }
 
-        // DP 배열: 최소 곱셈 연산 횟수
-        int[][] dp = new int[N][N];
-        // 결과 행렬의 행, 열 크기 추적
-        int[][] row = new int[N][N];
-        int[][] col = new int[N][N];
-
-        // 초기화: 각 행렬 자기 자신
+        p[0] = matrix[0][0];
         for (int i = 0; i < N; i++) {
-            row[i][i] = size[i][0];
-            col[i][i] = size[i][1];
+            p[i + 1] = matrix[i][1];
         }
 
-        // 길이 2부터 N까지의 구간 처리
+        dp = new int[N + 1][N + 1];
+
+        //DP
         for (int len = 2; len <= N; len++) {
-            for (int i = 0; i <= N - len; i++) {
+            for (int i = 1; i <= N - len + 1; i++) {
                 int j = i + len - 1;
                 dp[i][j] = Integer.MAX_VALUE;
-
                 for (int k = i; k < j; k++) {
-                    int cost = dp[i][k] + dp[k + 1][j]
-                             + row[i][k] * col[i][k] * col[k + 1][j];
-                    if (cost < dp[i][j]) {
-                        dp[i][j] = cost;
-                        row[i][j] = row[i][k];
-                        col[i][j] = col[k + 1][j];
-                    }
+                    int cost = dp[i][k] + dp[k + 1][j] + p[i - 1] * p[k] * p[j];
+                    dp[i][j] = Math.min(dp[i][j], cost);
                 }
             }
         }
 
-        System.out.println(dp[0][N - 1]); // 최소 곱셈 연산 횟수 출력
+        System.out.println(dp[1][N]);
     }
 }
