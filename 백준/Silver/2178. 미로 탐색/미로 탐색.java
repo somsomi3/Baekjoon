@@ -3,54 +3,51 @@ import java.util.*;
 
 public class Main {
     static int N, M;
-    static int[][] maze;
+    static char[][] map;
+    static int[][] dist;
     static boolean[][] visited;
-    static int[] dx = {0, 0, -1, 1}; // 상하좌우
-    static int[] dy = {1, -1, 0, 0};
+    static final int[] dx = {1, -1, 0, 0};
+    static final int[] dy = {0, 0, 1, -1};
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-        st = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        maze = new int[N][M];
-        visited = new boolean[N][M];
-
+        map = new char[N][M];
         for (int i = 0; i < N; i++) {
-            String line = br.readLine();
-            for (int j = 0; j < M; j++) {
-                maze[i][j] = line.charAt(j) - '0';
-            }
+            map[i] = br.readLine().toCharArray();
         }
 
+        dist = new int[N][M];
+        visited = new boolean[N][M];
+
         bfs(0, 0);
-        System.out.println(maze[N - 1][M - 1]);
+        System.out.println(dist[N - 1][M - 1]);
     }
 
-    static void bfs(int x, int y) {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[] {x, y});
-        visited[x][y] = true;
+    static void bfs(int sx, int sy) {
+        Queue<int[]> q = new ArrayDeque<>();
+        visited[sx][sy] = true;
+        dist[sx][sy] = 1;
+        q.offer(new int[]{sx, sy});
 
-        while (!queue.isEmpty()) {
-            int[] now = queue.poll();
-            int curX = now[0];
-            int curY = now[1];
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int x = cur[0], y = cur[1];
 
-            for (int i = 0; i < 4; i++) {
-                int nx = curX + dx[i];
-                int ny = curY + dy[i];
+            for (int d = 0; d < 4; d++) {
+                int nx = x + dx[d];
+                int ny = y + dy[d];
 
-                if (nx >= 0 && ny >= 0 && nx < N && ny < M) {
-                    if (!visited[nx][ny] && maze[nx][ny] == 1) {
-                        queue.add(new int[] {nx, ny});
-                        visited[nx][ny] = true;
-                        maze[nx][ny] = maze[curX][curY] + 1; // 거리 누적
-                    }
-                }
+                if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+                if (map[nx][ny] == '0') continue;
+                if (visited[nx][ny]) continue;
+
+                visited[nx][ny] = true;
+                dist[nx][ny] = dist[x][y] + 1;
+                q.offer(new int[]{nx, ny});
             }
         }
     }
