@@ -3,63 +3,72 @@ import java.util.*;
 
 public class Main {
 
-    static class Node {
-        int x, y, broken, time, day;
-        public Node(int x, int y, int broken, int time, int day) {
-            this.x = x;
-            this.y = y;
-            this.broken = broken;
-            this.time = time;
-            this.day = day;
+    static class Pos {
+        int r, c, k, dist;
+        public Pos(int r, int c, int k, int dist) {
+            this.r = r;
+            this.c = c;
+            this.k = k;
+            this.dist = dist;
         }
     }
 
     static int N, M, K;
-    static char[][] map;
-    static boolean[][][][] visited;
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+    static int[][] map;
+    static int[][] visited;
+    static final int[] row = {0, -1, 0, 1};
+    static final int[] col = {-1, 0, 1, 0};
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Queue<Pos> q = new ArrayDeque<>();
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
 
-        map = new char[N][M];
-        for (int i = 0; i < N; i++) map[i] = br.readLine().toCharArray();
+        if (N == 1 && M == 1) {
+            System.out.println(1);
+            return;
+        }
 
-        visited = new boolean[N][M][K + 1][2];
-        Queue<Node> q = new ArrayDeque<>();
-        q.offer(new Node(0, 0, 0, 1, 0));
-        visited[0][0][0][0] = true;
+        map = new int[N][M];
+        visited = new int[N][M];
+
+        for (int i = 0; i < N; i++) {
+            String line = br.readLine();
+            for (int j = 0; j < M; j++) {
+                map[i][j] = line.charAt(j) - '0';
+            }
+        }
+
+        q.offer(new Pos(0, 0, K + 1, 1));
+        visited[0][0] = K + 1;
 
         while (!q.isEmpty()) {
-            Node cur = q.poll();
-            if (cur.x == N - 1 && cur.y == M - 1) {
-                System.out.println(cur.time);
-                return;
-            }
+            Pos poll = q.poll();
 
-            int nd = (cur.day + 1) % 2;
+            for (int i = 0; i < 4; i++) {
+                int nr = poll.r + row[i];
+                int nc = poll.c + col[i];
 
-            for (int dir = 0; dir < 4; dir++) {
-                int nx = cur.x + dx[dir];
-                int ny = cur.y + dy[dir];
+                if (nr < 0 || nr >= N || nc < 0 || nc >= M) continue;
+                if (visited[nr][nc] != 0 && visited[nr][nc] >= poll.k) continue;
+                if (nr == N - 1 && nc == M - 1) {
+                    System.out.println(poll.dist + 1);
+                    return;
+                }
 
-                if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-
-                if (map[nx][ny] == '0' && !visited[nx][ny][cur.broken][nd]) {
-                    visited[nx][ny][cur.broken][nd] = true;
-                    q.offer(new Node(nx, ny, cur.broken, cur.time + 1, nd));
-                } else if (map[nx][ny] == '1' && cur.broken < K) {
-                    if (cur.day == 0 && !visited[nx][ny][cur.broken + 1][nd]) {
-                        visited[nx][ny][cur.broken + 1][nd] = true;
-                        q.offer(new Node(nx, ny, cur.broken + 1, cur.time + 1, nd));
-                    } else if (cur.day == 1) {
-                        q.offer(new Node(cur.x, cur.y, cur.broken, cur.time + 1, nd));
+                if (map[nr][nc] == 0) {
+                    visited[nr][nc] = poll.k;
+                    q.offer(new Pos(nr, nc, poll.k, poll.dist + 1));
+                } else if (map[nr][nc] == 1 && poll.k > 1) {
+                    if (poll.dist % 2 == 1) {
+                        visited[nr][nc] = poll.k;
+                        q.offer(new Pos(nr, nc, poll.k - 1, poll.dist + 1));
+                    } else {
+                        q.offer(new Pos(poll.r, poll.c, poll.k, poll.dist + 1));
                     }
                 }
             }
