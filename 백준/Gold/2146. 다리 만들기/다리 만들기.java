@@ -3,101 +3,104 @@ import java.util.*;
 
 public class Main {
     static int N;
-    static int[][] map;
-    static boolean[][] visited;
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+    static int answer = Integer.MAX_VALUE;
+    static int[][] dist;
+    static int[][] cities;
+    static Queue<int[]> queue = new ArrayDeque<>();
 
-    // 섬 구분 BFS
-    static void bfs(int x, int y, int id) {
-        Queue<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{x, y});
-        visited[x][y] = true;
-        map[x][y] = id;
+    static int[] dr = {-1, 1, 0, 0};
+    static int[] dc = {0, 0, -1, 1};
 
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
-            for (int d = 0; d < 4; d++) {
-                int nx = cur[0] + dx[d];
-                int ny = cur[1] + dy[d];
-                if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-                if (!visited[nx][ny] && map[nx][ny] == 1) {
-                    visited[nx][ny] = true;
-                    map[nx][ny] = id;
-                    q.offer(new int[]{nx, ny});
+    public static void main(String[] args) throws IOException {
+        getInput();
+        markCity();
+        bfs();
+        System.out.println(answer);
+    }
+
+    //모든 섬의 가장자리에서 동시에 출발
+    public static void bfs() {
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int r = curr[0], c = curr[1], id = curr[2];
+
+            for (int k = 0; k < 4; k++) {
+                int nr = r + dr[k];
+                int nc = c + dc[k];
+
+                if (nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
+
+                // 바다 → 다리 확장
+                if (dist[nr][nc] == -1) {
+                    queue.add(new int[]{nr, nc, id});
+                    cities[nr][nc] = id;
+                    dist[nr][nc] = dist[r][c] + 1;
+                }
+                // 다른 섬 만남 → 다리 길이 계산
+                else if (cities[nr][nc] != id) {
+                    answer = Math.min(answer, dist[nr][nc] + dist[r][c]);
                 }
             }
         }
     }
 
-    // 다리 BFS (id 섬에서 출발)
-    static int bfs2(int id) {
-        int[][] dist = new int[N][N];
-        for (int i = 0; i < N; i++) Arrays.fill(dist[i], -1);
-
+    // 섬 구분하기 + "가장자리"만 큐에 넣기
+    public static void markCity() {
         Queue<int[]> q = new ArrayDeque<>();
+        int city = 0;
 
-        // 해당 섬의 모든 좌표를 시작점으로 넣음
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (map[i][j] == id) {
-                    q.offer(new int[]{i, j});
-                    dist[i][j] = 0;
+                if (dist[i][j] == 0 && cities[i][j] == 0) {
+                    q.add(new int[]{i, j});
+                    cities[i][j] = ++city;
+
+                    while (!q.isEmpty()) {
+                        int[] curr = q.poll();
+                        int r = curr[0], c = curr[1];
+
+                        boolean isEdge = false;
+
+                        for (int k = 0; k < 4; k++) {
+                            int nr = r + dr[k];
+                            int nc = c + dc[k];
+                            if (nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
+
+                            if (dist[nr][nc] == -1) {
+                                //가장자리
+                                isEdge = true;
+                            } else if (dist[nr][nc] == 0 && cities[nr][nc] == 0) {
+                                cities[nr][nc] = city;
+                                q.add(new int[]{nr, nc});
+                            }
+                        }
+
+                        // 가장자리만 큐에 넣기
+                        if (isEdge) {
+                            queue.add(new int[]{r, c, city});
+                        }
+                    }
                 }
             }
         }
-
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
-            int x = cur[0], y = cur[1];
-            for (int d = 0; d < 4; d++) {
-                int nx = x + dx[d];
-                int ny = y + dy[d];
-                if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-
-                // 바다일 경우 다리 연장
-                if (map[nx][ny] == 0 && dist[nx][ny] == -1) {
-                    dist[nx][ny] = dist[x][y] + 1;
-                    q.offer(new int[]{nx, ny});
-                }
-                // 다른 섬을 만나면 다리 완성
-                else if (map[nx][ny] != 0 && map[nx][ny] != id) {
-                    return dist[x][y];
-                }
-            }
-        }
-        return Integer.MAX_VALUE;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void getInput() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
         N = Integer.parseInt(br.readLine());
-        map = new int[N][N];
-        visited = new boolean[N][N];
+        dist = new int[N][N];
+        cities = new int[N][N];
 
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
+                if (st.nextToken().equals("0"))
+                    dist[i][j] = -1;
+                else
+                    dist[i][j] = 0;
             }
         }
-
-        // 섬 번호 붙이기
-        int id = 2;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (map[i][j] == 1 && !visited[i][j]) {
-                    bfs(i, j, id++);
-                }
-            }
-        }
-
-        // 다리 BFS 실행
-        int ans = Integer.MAX_VALUE;
-        for (int k = 2; k < id; k++) {
-            ans = Math.min(ans, bfs2(k));
-        }
-
-        System.out.println(ans);
     }
 }
