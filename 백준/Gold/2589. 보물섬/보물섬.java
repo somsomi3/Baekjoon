@@ -25,12 +25,22 @@ public class Main {
         int answer = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                if (map[i][j] == 'L') {
+                if (map[i][j] == 'L' && isEdge(i, j)) {
                     answer = Math.max(answer, bfs(i, j));
                 }
             }
         }
         System.out.println(answer);
+    }
+
+    static boolean isEdge(int r, int c) {
+        for (int k = 0; k < 4; k++) {
+            int nr = r + dr[k];
+            int nc = c + dc[k];
+            if (nr < 0 || nr >= N || nc < 0 || nc >= M) return true;
+            if (map[nr][nc] == 'W') return true;
+        }
+        return false;
     }
 
     static int bfs(int sr, int sc) {
