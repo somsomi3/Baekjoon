@@ -9,16 +9,15 @@ public class Main {
     static int[] dc = {0, 0, -1, 1};
 
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        N = read();
+        M = read();
         map = new char[N][M];
 
         for (int i = 0; i < N; i++) {
-            String line = br.readLine();
             for (int j = 0; j < M; j++) {
-                map[i][j] = line.charAt(j);
+                int c;
+                while ((c = System.in.read()) <= 32); // 공백/개행 무시
+                map[i][j] = (char) c;
             }
         }
 
@@ -67,5 +66,14 @@ public class Main {
             }
         }
         return maxDist;
+    }
+
+    static int read() throws Exception {
+        int c, n = 0;
+        while ((c = System.in.read()) <= 32); // 공백/개행 건너뜀
+        do {
+            n = n * 10 + (c - '0');
+        } while ((c = System.in.read()) > 32);
+        return n;
     }
 }
