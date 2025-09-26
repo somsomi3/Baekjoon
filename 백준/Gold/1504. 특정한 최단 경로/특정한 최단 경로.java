@@ -13,8 +13,8 @@ public class Main {
         }
     }
 
-    static final int INF = 200_000_000;
-    static List<List<Node>> graph;
+    static final int INF = 200000000;
+    static List<Node>[] graph;
     static int N, E;
 
     public static void main(String[] args) throws IOException {
@@ -24,32 +24,36 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         E = Integer.parseInt(st.nextToken());
 
-        graph = new ArrayList<>();
-        for (int i = 0; i <= N; i++) graph.add(new ArrayList<>());
+        graph = new ArrayList[N + 1];
+        for (int i = 1; i <= N; i++) {
+            graph[i] = new ArrayList<>();
+        }
 
         for (int i = 0; i < E; i++) {
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            int c = Integer.parseInt(st.nextToken());
-            graph.get(a).add(new Node(b, c));
-            graph.get(b).add(new Node(a, c));
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+            graph[u].add(new Node(v, w));
+            graph[v].add(new Node(u, w));
         }
 
         st = new StringTokenizer(br.readLine());
         int v1 = Integer.parseInt(st.nextToken());
         int v2 = Integer.parseInt(st.nextToken());
 
-        // 다익스트라 3번
-        int[] dist1 = dijkstra(1);
-        int[] distV1 = dijkstra(v1);
-        int[] distV2 = dijkstra(v2);
+        // 다익스트라 3번 실행
+        int[] distFrom1 = dijkstra(1);
+        int[] distFromV1 = dijkstra(v1);
+        int[] distFromV2 = dijkstra(v2);
 
-        long path1 = (long) dist1[v1] + distV1[v2] + distV2[N];
-        long path2 = (long) dist1[v2] + distV2[v1] + distV1[N];
+        // 두 경로 계산
+        long path1 = (long)distFrom1[v1] + distFromV1[v2] + distFromV2[N]; // 1→v1→v2→N
+        long path2 = (long)distFrom1[v2] + distFromV2[v1] + distFromV1[N]; // 1→v2→v1→N
 
-        long result = Math.min(path1, path2);
-        System.out.println(result >= INF ? -1 : result);
+        long answer = Math.min(path1, path2);
+        if (answer >= INF) System.out.println(-1);
+        else System.out.println(answer);
     }
 
     static int[] dijkstra(int start) {
@@ -58,16 +62,16 @@ public class Main {
         dist[start] = 0;
 
         PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.add(new Node(start, 0));
+        pq.offer(new Node(start, 0));
 
         while (!pq.isEmpty()) {
             Node cur = pq.poll();
-            if (cur.w > dist[cur.v]) continue;
+            if (dist[cur.v] < cur.w) continue;
 
-            for (Node next : graph.get(cur.v)) {
-                if (dist[next.v] > cur.w + next.w) {
-                    dist[next.v] = cur.w + next.w;
-                    pq.add(new Node(next.v, dist[next.v]));
+            for (Node next : graph[cur.v]) {
+                if (dist[next.v] > dist[cur.v] + next.w) {
+                    dist[next.v] = dist[cur.v] + next.w;
+                    pq.offer(new Node(next.v, dist[next.v]));
                 }
             }
         }
