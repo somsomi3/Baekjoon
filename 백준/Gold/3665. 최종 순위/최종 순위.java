@@ -9,15 +9,22 @@ public class Main {
 
         while (T-- > 0) {
             int n = Integer.parseInt(br.readLine());
-            int[] indeg = new int[n + 1];
-            boolean[][] adj = new boolean[n + 1][n + 1];
-            StringTokenizer st = new StringTokenizer(br.readLine());
             int[] last = new int[n + 1];
-            for (int i = 1; i <= n; i++) last[i] = Integer.parseInt(st.nextToken());
+            int[] rank = new int[n + 1];
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int i = 1; i <= n; i++) {
+                last[i] = Integer.parseInt(st.nextToken());
+                rank[last[i]] = i;
+            }
+
+            boolean[][] adj = new boolean[n + 1][n + 1];
+            int[] indeg = new int[n + 1];
+
             for (int i = 1; i <= n; i++) {
                 for (int j = i + 1; j <= n; j++) {
-                    adj[last[i]][last[j]] = true;
-                    indeg[last[j]]++;
+                    int a = last[i], b = last[j];
+                    adj[a][b] = true;
+                    indeg[b]++;
                 }
             }
 
@@ -42,29 +49,25 @@ public class Main {
             Queue<Integer> q = new ArrayDeque<>();
             for (int i = 1; i <= n; i++) if (indeg[i] == 0) q.offer(i);
 
-            List<Integer> result = new ArrayList<>();
-            boolean certain = true, impossible = false;
+            List<Integer> res = new ArrayList<>();
+            boolean impossible = false, uncertain = false;
 
             for (int i = 0; i < n; i++) {
-                if (q.isEmpty()) {
-                    impossible = true;
-                    break;
-                }
-                if (q.size() > 1) certain = false;
-                int cur = q.poll();
-                result.add(cur);
-                for (int j = 1; j <= n; j++) {
-                    if (adj[cur][j]) {
-                        indeg[j]--;
-                        if (indeg[j] == 0) q.offer(j);
+                if (q.isEmpty()) { impossible = true; break; }
+                if (q.size() > 1) uncertain = true;
+                int u = q.poll();
+                res.add(u);
+                for (int v = 1; v <= n; v++) {
+                    if (adj[u][v]) {
+                        if (--indeg[v] == 0) q.offer(v);
                     }
                 }
             }
 
             if (impossible) sb.append("IMPOSSIBLE\n");
-            else if (!certain) sb.append("?\n");
+            else if (uncertain) sb.append("?\n");
             else {
-                for (int x : result) sb.append(x).append(' ');
+                for (int x : res) sb.append(x).append(' ');
                 sb.append('\n');
             }
         }
