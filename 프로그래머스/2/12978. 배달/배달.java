@@ -1,54 +1,55 @@
 import java.util.*;
 class Solution {
-    static class Node implements Comparable<Node>{
-		int v, w;
-		Node(int v, int w){
-			this.v = v;
-			this.w = w;
-		}
-		public int compareTo(Node o) {
-			return this.w -o.w;
-		}
-	}
+   static class Node implements Comparable<Node>{
+       int to, cost;
+       Node(int to, int cost){
+           this.to = to;
+           this.cost = cost;
+       }
+       public int compareTo(Node o){
+           return this.cost - o.cost;
+       }
+   }
+    //입력 없어도되고
     public int solution(int N, int[][] road, int K) {
-        final int INF = 1_000_000_000;
-        List<Node>[] graph = new ArrayList[N + 1];
-        int[] dist = new int[N + 1];
-
-        for (int i = 1; i <= N; i++) graph[i] = new ArrayList<>();
+        final int INF = Integer.MAX_VALUE;
+        int[] dist = new int[N+1];
+        List<Node>[] graph = new ArrayList[N+1];
+        
+        for(int i=1; i<=N; i++){
+            graph[i] = new ArrayList<>();
+        }
         Arrays.fill(dist, INF);
-
-        // 도로 정보 (양방향)
-        for (int[] r : road) {
-            int a = r[0], b = r[1], c = r[2];
+        
+        for(int[] r: road){
+            int a =r[0], b=r[1], c=r[2];
             graph[a].add(new Node(b, c));
             graph[b].add(new Node(a, c));
         }
-
-        // 다익스트라 시작 (항상 1번 마을)
         PriorityQueue<Node> pq = new PriorityQueue<>();
-        dist[1] = 0;
-        pq.add(new Node(1, 0));
-
-        while (!pq.isEmpty()) {
+        pq.offer(new Node(1, 0));
+        dist[1] = 0; 
+        
+        while(!pq.isEmpty()){
             Node cur = pq.poll();
-            int v = cur.v, w = cur.w;
-            if (dist[v] < w) continue;
-
-            for (Node nxt : graph[v]) {
-                if (dist[nxt.v] > dist[v] + nxt.w) {
-                    dist[nxt.v] = dist[v] + nxt.w;
-                    pq.add(new Node(nxt.v, dist[nxt.v]));
+            int curNode = cur.to;
+            int curDist = cur.cost;
+            
+            if(curDist>dist[curNode])continue;
+            for(Node next: graph[curNode]){
+                if(curDist+next.cost<dist[next.to]){
+                    dist[next.to] = curDist+next.cost;
+                    pq.offer(new Node(next.to, dist[next.to]));
                 }
             }
         }
-
-        // K 이하 거리 마을 수 세기
+        // 마을 수 count
         int count = 0;
-        for (int i = 1; i <= N; i++) {
-            if (dist[i] <= K) count++;
+        for(int i=1; i<=N; i++){
+            if(dist[i]<=K){
+                count++;
+            }
         }
-
         return count;
     }
 }
