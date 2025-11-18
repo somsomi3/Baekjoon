@@ -14,8 +14,20 @@ public class Main {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		Arrays.sort(arr);
+//		Arrays.sort(arr);
+//		System.out.println(arr[0]+ " " + arr[N-1]);
 		
-		System.out.println(arr[0]+ " " + arr[N-1]);
+		int big = -1_000_001;
+		int small = 1_000_001;
+		for(int i =0; i<N; i++) {
+			if(big<arr[i]) {
+				big = arr[i];
+//				System.out.println(big);
+//			}else if(small>arr[i]) {
+			}if(small>arr[i]) {
+				small = arr[i];
+			}
+		}
+		System.out.println(small+" "+big);
 	}
 }
