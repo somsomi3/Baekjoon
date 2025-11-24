@@ -5,17 +5,17 @@ public class Main {
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		int n = 30;
+		HashSet<Integer> set = new HashSet<>();
 		
-		int[] arr = new int[n+1];//범위주의
-		for(int i=1; i<=28; i++) {//입력갯수주의
-			int x = Integer.parseInt(br.readLine());
-			arr[x] =x;
+		for(int i=1; i<=28; i++) {
+			set.add(Integer.parseInt(br.readLine()));
 		}
-		for(int i=1; i<=n; i++) {
-			if(arr[i]==0) {
+		
+		for(int i =1; i<=30; i++) {
+			//set의 contains쓰기
+			if(!set.contains(i)) {
 				System.out.println(i);
 			}
-		}	
+		}
 	}
 }
