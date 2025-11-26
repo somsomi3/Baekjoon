@@ -2,20 +2,17 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		int T = Integer.parseInt(br.readLine());
+		
+		while(T-->0) {
+			String s = br.readLine();
 
-        StringBuilder sb = new StringBuilder();
-        
-        for (int i=0; i<N; i++) {
-            String doc= br.readLine();
-            char x = doc.charAt(0);
-            char y= doc.charAt(doc.length()-1);
-            sb.append(x).append(y).append("\n");
-            
-        }
-        System.out.print(sb);
-    }
-
+			System.out.print(s.charAt(0));
+			System.out.println(s.charAt(s.length()-1));
+			
+		}
+	}
 }
