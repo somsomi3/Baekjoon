@@ -17,10 +17,11 @@ public class Main {
 			String password = st.nextToken();
 			map.put(juso, password);
 		}
-		
+		StringBuilder sb = new StringBuilder();
 		for(int j =0; j<M; j++) {
 			String qq = br.readLine();
-			System.out.println(map.get(qq));
+			sb.append(map.get(qq)).append('\n');
 		}
+		System.out.println(sb);
 	}
 }
