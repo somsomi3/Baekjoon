@@ -7,10 +7,11 @@ public class Main {
 		
 		int N = Integer.parseInt(br.readLine());
 		
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		String[] arr = br.readLine().split(" ");
+		
 		int count =0;
-		for(int i=0; i<5; i++) {
-			if(Integer.parseInt(st.nextToken())==N)count++;
+		for(String r : arr) {
+			if(Integer.parseInt(r)==N)count++;
 		}
 		System.out.println(count);
 	}
