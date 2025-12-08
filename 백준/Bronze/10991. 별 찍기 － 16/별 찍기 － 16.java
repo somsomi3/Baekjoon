@@ -12,10 +12,8 @@ public class Main {
 			for(int j=N-i; j>0; j--) {
 				sb.append(" ");
 			}
-			for(int j=0; j<=i; j++) {
-				if(j!=i) {
+			for(int j=0; j<i; j++) {
 					sb.append("*").append(" ");
-				}
 			}
 			sb.append('\n');
 		}
