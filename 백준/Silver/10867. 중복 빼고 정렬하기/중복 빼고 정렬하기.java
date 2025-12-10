@@ -2,25 +2,26 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static void main(String[] args)throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int N = Integer.parseInt(br.readLine());
-		HashSet<Integer>set = new HashSet<>();
-		
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for(int i =0; i<N; i++) {
-			set.add(Integer.parseInt(st.nextToken()));
-		}
-		 // set → 배열 변환
-        Integer[] arr = set.toArray(new Integer[0]);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        Arrays.sort(arr);
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        // 값 범위: -1000 ~ 1000 → 총 2001개
+        boolean[] exist = new boolean[2001];
+
+        for (int i = 0; i < N; i++) {
+            int num = Integer.parseInt(st.nextToken());
+            exist[num + 1000] = true; // index shift
+        }
 
         StringBuilder sb = new StringBuilder();
-        for (int x : arr) {
-            sb.append(x).append(" ");
+
+        for (int i = 0; i < 2001; i++) {
+            if (exist[i]) sb.append(i - 1000).append(" ");
         }
+
         System.out.println(sb.toString());
     }
 }
