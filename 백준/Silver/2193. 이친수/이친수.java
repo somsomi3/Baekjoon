@@ -1,19 +1,25 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        long[][] dp = new long[n + 1][2];
-
-        dp[1][0] = 0;
-        dp[1][1] = 1;
-
-        for (int i = 2; i <= n; i++) {
-            dp[i][0] = dp[i - 1][0] + dp[i - 1][1];
-            dp[i][1] = dp[i - 1][0];
-        }
-
-        System.out.println(dp[n][0] + dp[n][1]);
-    }
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+//		N = 1 일 때 배열 범위 초과
+//		if (N == 1) {
+//		    System.out.println(1);
+//		    return;
+//		}
+		
+		long[] dp = new long[N+1];
+		
+		dp[1] =1;
+		//N은 1일때 dp[2]는 없다.
+		if (N >= 2) dp[2] = 1;
+		
+		for(int i =3; i<=N; i++) {
+			dp[i] = dp[i-1]+dp[i-2];
+		}
+		System.out.println(dp[N]);
+	}
 }
