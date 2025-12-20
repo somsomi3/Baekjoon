@@ -1,32 +1,36 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
-	public static void main(String[] args)throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int T = Integer.parseInt(br.readLine());
-		
-		for(int i=0; i<T; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			
-			int N = Integer.parseInt(st.nextToken());
-			int M = Integer.parseInt(st.nextToken());
-			
-			int count =0;
-			for(int j=N; j<=M; j++) {
-//				String s = j.toString;
-				String s = String.valueOf(j);
-				
-//				char c =s.charAt(j);
-//				if(c=='0')count++;
-			    for (int k = 0; k < s.length(); k++) {
-			        if (s.charAt(k) == '0') {
-			            count++;
-			        }
-			    }
-			}
-		    System.out.println(count);
-		}
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine());
+
+        StringBuilder out = new StringBuilder();
+
+        for (int i = 0; i < T; i++) {
+            String[] parts = br.readLine().split(" ");
+            int N = Integer.parseInt(parts[0]);
+            int M = Integer.parseInt(parts[1]);
+
+            int count = 0;
+
+            for (int j = N; j <= M; j++) {
+                int x = j;
+
+                if (x == 0) {
+                    count++;
+                    continue;
+                }
+
+                while (x > 0) {
+                    if (x % 10 == 0) count++;
+                    x /= 10;
+                }
+            }
+
+            out.append(count).append('\n');
+        }
+
+        System.out.print(out.toString());
+    }
 }
