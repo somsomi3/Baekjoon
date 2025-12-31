@@ -2,34 +2,36 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	    StringTokenizer st = new StringTokenizer(br.readLine());
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	    int[] score = new int[3];
-    	for (int i = 0; i < 3; i++) {
-    		score[i] = Integer.parseInt(st.nextToken());
+        HashMap<String, Integer> map = new HashMap<>();
+
+        map.put("Soongsil", Integer.parseInt(st.nextToken()));
+        map.put("Korea", Integer.parseInt(st.nextToken()));
+        map.put("Hanyang", Integer.parseInt(st.nextToken()));
+
+        int sum = 0;
+        for (int v : map.values()) {
+            sum += v;
         }
-	    
-    	int sum = score[0]+score[1]+score[2];
-    	
 
         if (sum >= 100) {
             System.out.println("OK");
             return;
         }
-        
-        //그게 아니라면
-        int minIdx = 0;
-        for(int i =1; i<3; i++) {
-        	if(score[i]<score[minIdx]) {
-        		minIdx = i;
-        	}
+
+        String minSchool = "";
+        int minScore = Integer.MAX_VALUE;
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            if (entry.getValue() < minScore) {
+                minScore = entry.getValue();
+                minSchool = entry.getKey();
+            }
         }
-        
-        String[] nara  = {"Soongsil", "Korea", "Hanyang"};
-        System.out.println(nara[minIdx]);
-        
-    	
-	 }
+
+        System.out.println(minSchool);
+    }
 }
