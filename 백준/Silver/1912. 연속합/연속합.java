@@ -1,33 +1,21 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        // 입력 준비
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         int N = Integer.parseInt(br.readLine());
-        int[] arr = new int[N];
-        int[] dp = new int[N];
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-        }
-
-        // DP 시작
-        dp[0] = arr[0];
-        int max = dp[0];
+        int cur = Integer.parseInt(st.nextToken());
+        int ans = cur;
 
         for (int i = 1; i < N; i++) {
-            dp[i] = Math.max(arr[i], dp[i - 1] + arr[i]);
-            if (dp[i] > max) {
-                max = dp[i];
-            }
+            int x = Integer.parseInt(st.nextToken());
+            cur = Math.max(x, cur + x);
+            ans = Math.max(ans, cur);
         }
 
-        System.out.println(max);
+        System.out.println(ans);
     }
 }
