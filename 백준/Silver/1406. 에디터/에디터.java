@@ -2,42 +2,50 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        Stack<Character> left = new Stack<>();
-        Stack<Character> right = new Stack<>();
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		Stack<Character> stack1 = new Stack<>();
+		Stack<Character> stack2 = new Stack<>();
+		
+		String s = br.readLine();
+		
+		for(char c: s.toCharArray()) {
+//			stack1.add(c);
+			stack1.push(c);		
+		}
+		
+		int N = Integer.parseInt(br.readLine());
+		
 
-        String str = br.readLine();
-        for (char c : str.toCharArray()) {
-            left.push(c);
-        }
-
-        int M = Integer.parseInt(br.readLine());
-        for (int i = 0; i < M; i++) {
-            String command = br.readLine();
-            char cmd = command.charAt(0);
-
-            if (cmd == 'L') {
-                if (!left.isEmpty()) {
-                    right.push(left.pop());
-                }
-            } else if (cmd == 'D') {
-                if (!right.isEmpty()) {
-                    left.push(right.pop());
-                }
-            } else if (cmd == 'B') {
-                if (!left.isEmpty()) {
-                    left.pop();
-                }
-            } else if (cmd == 'P') {
-                char ch = command.charAt(2);
-                left.push(ch);
+        while (N-- > 0) {
+            String cmd = br.readLine();
+            char c = cmd.charAt(0);
+            
+            
+            if(c=='P') {
+            	stack1.push(cmd.charAt(2));
+            }else if(c=='L') {
+//            	while(!stack1.isEmpty()) {
+                if (!stack1.isEmpty()) {
+            		stack2.push(stack1.pop());
+            	}
+            }else if(c=='B') {
+//            	while(!stack1.isEmpty()) {
+                if (!stack1.isEmpty()) {
+            		stack1.pop();
+            	}
+            }else if(c=='D') {
+            	if (!stack2.isEmpty()) {
+            		stack1.push(stack2.pop());
+            	}
             }
-        }
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (char c : stack1) sb.append(c);
+		while (!stack2.isEmpty()) sb.append(stack2.pop());
 
-        StringBuilder sb = new StringBuilder();
-        for (char c : left) sb.append(c);
-        while (!right.isEmpty()) sb.append(right.pop());
-        System.out.println(sb);
-    }
+		System.out.println(sb);
+	}
 }
