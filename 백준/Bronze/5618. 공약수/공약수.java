@@ -26,10 +26,25 @@ public class Main {
 		for(int i =1; i<N; i++) {
 			g = gcd(g, arr[i]);
 		}
-		for(int j=1; j<=g; j++) {
-		if(g%j==0) {
-			System.out.println(j);
-			}
+//		for(int j=1; j<=g; j++) {
+//		if(g%j==0) {
+//			System.out.println(j);
+//			}
+//		}
+		List<Integer> res = new ArrayList<>();
+
+		for (int i = 1; i * i <= g; i++) {
+		    if (g % i == 0) {
+		        res.add(i);
+		        if (i != g / i) {
+		            res.add(g / i);
+		        }
+		    }
+		}
+
+		Collections.sort(res);
+		for (int x : res) {
+		    System.out.println(x);
 		}
 	}
 }
