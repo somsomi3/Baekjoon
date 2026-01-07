@@ -2,44 +2,56 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	static class Two{
+		String s;
+		int sum;
+		Two(String s, int sum){
+			this.s = s;
+			this.sum = sum;
+		}
+	}
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
+		
+		List<Two> list = new ArrayList<>();
+		
+		for(int i =0; i<N; i++) {
+			 String s = br.readLine();
+			 int sum = 0;
+			 for (int j = 0; j < s.length(); j++) {
+			     if (Character.isDigit(s.charAt(j))) {//중요!: 이 문자에대해, 이문자가 숫자인가? 라는 뜻.
+			         sum += s.charAt(j) - '0';
+			     }
+			 }
+			 
+			 list.add(new Two(s, sum));
+		}
 
-    static int digitSum(String s) {
-        int sum = 0;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (Character.isDigit(c)) {
-                sum += c - '0';
-            }
-        }
-        return sum;
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int N = Integer.parseInt(br.readLine());
-        String[] arr = new String[N];
-
-        for (int i = 0; i < N; i++) {
-            arr[i] = br.readLine();
-        }
-
-        Arrays.sort(arr, (a, b) -> {
-            if (a.length() != b.length())
-                return a.length() - b.length();
-
-            int sumA = digitSum(a);
-            int sumB = digitSum(b);
-            if (sumA != sumB)
-                return sumA - sumB;
-
-            return a.compareTo(b);
-        });
-
+		list.sort((a,b)-> {
+			if (a.s.length() != b.s.length()) {
+			    return a.s.length() - b.s.length();
+			} else if (a.sum != b.sum) {
+			    return a.sum - b.sum;
+			} else {
+			    return a.s.compareTo(b.s);
+			}
+//            if (a.s.length() != b.s.length()) {
+//                return a.s.length() - b.s.length();
+//            }
+//            if (a.sum != b.sum) {
+//                return a.sum - b.sum;
+//            }
+//            return a.s.compareTo(b.s);
+			
+		});
+		
         StringBuilder sb = new StringBuilder();
-        for (String s : arr) {
-            sb.append(s).append('\n');
+        for (Two t : list) {
+            sb.append(t.s).append('\n');
         }
+
         System.out.print(sb);
     }
 }
