@@ -2,54 +2,43 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static int N, M;
+    static List<Integer>[] adj;
     static boolean[] visited;
-    static ArrayList<Integer>[] graph;
 
-    public static void main(String[] args) throws IOException {
-        // 입력을 빠르게 받기 위해 BufferedReader 사용
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        int n = Integer.parseInt(st.nextToken()); // 정점의 개수
-        int m = Integer.parseInt(st.nextToken()); // 간선의 개수
+        adj = new ArrayList[N + 1];
+        visited = new boolean[N + 1];
+        for (int i = 1; i <= N; i++) adj[i] = new ArrayList<>();
 
-        graph = new ArrayList[n + 1];
-        visited = new boolean[n + 1];
-
-        // 인접 리스트 초기화
-        for (int i = 1; i <= n; i++) {
-            graph[i] = new ArrayList<>();
-        }
-
-        // 간선 입력
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            graph[u].add(v);
-            graph[v].add(u); // 양방향 그래프
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            adj[a].add(b);
+            adj[b].add(a);
         }
 
-        int count = 0;
-
-        // 모든 노드를 방문하며 DFS 수행
-        for (int i = 1; i <= n; i++) {
+        int cnt = 0;
+        for (int i = 1; i <= N; i++) {
             if (!visited[i]) {
                 dfs(i);
-                count++; // 새로운 연결 요소 발견
+                cnt++;
             }
         }
 
-        System.out.println(count);
+        System.out.println(cnt);
     }
 
-    // 깊이 우선 탐색
-    public static void dfs(int node) {
-        visited[node] = true;
-        for (int neighbor : graph[node]) {
-            if (!visited[neighbor]) {
-                dfs(neighbor);
-            }
+    static void dfs(int cur) {
+        visited[cur] = true;
+        for (int next : adj[cur]) {
+            if (!visited[next]) dfs(next);
         }
     }
 }
