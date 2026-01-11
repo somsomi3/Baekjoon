@@ -1,41 +1,40 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     static int N, M;
-    static boolean[] visited;
-    static int[] result;
+    static int[] arr;
+    static boolean[] used;
+    static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] input = br.readLine().split(" ");
-
-        N = Integer.parseInt(input[0]);
-        M = Integer.parseInt(input[1]);
-
-        visited = new boolean[N + 1];
-        result = new int[M];
-
-        dfs(0);
-    }
-
-    public static void dfs(int depth) {
+    static void dfs(int depth) {
         if (depth == M) {
-            for (int num : result) {
-                System.out.print(num + " ");
-            }
-            System.out.println();
+            for (int i = 0; i < M; i++) sb.append(arr[i]).append(' ');
+            sb.append('\n');
             return;
         }
 
         for (int i = 1; i <= N; i++) {
-            if (!visited[i]) {
-                visited[i] = true;
-                result[depth] = i;
+            if (!used[i]) {
+                used[i] = true;
+                arr[depth] = i;
                 dfs(depth + 1);
-                visited[i] = false; // 백트래킹
+                used[i] = false;
             }
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+        arr = new int[M];
+        used = new boolean[N + 1];
+
+        dfs(0);
+        System.out.print(sb);
     }
 }
