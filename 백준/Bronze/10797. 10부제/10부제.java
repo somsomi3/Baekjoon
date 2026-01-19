@@ -5,13 +5,19 @@ public class Main {
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		int N = Integer.parseInt(br.readLine());
+		int a = Integer.parseInt(br.readLine());
 		
-		String[] arr = br.readLine().split(" ");
-		
-		int count =0;
-		for(String r : arr) {
-			if(Integer.parseInt(r)==N)count++;
+		int[] arr = new int[5];
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for(int i =0; i<5; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+
+		}
+		int count =0; 
+		for(int i =0; i<5; i++) {
+			if(a==arr[i]) {
+				count++;
+			}
 		}
 		System.out.println(count);
 	}
