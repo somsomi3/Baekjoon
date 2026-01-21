@@ -23,7 +23,7 @@ public class Main {
 				B = true;
 			}else if(c=='I') {
 				I = true;
-			}if(c=='S') {
+			}else if(c=='S') {
 				S = true;
 			}	
 		}
