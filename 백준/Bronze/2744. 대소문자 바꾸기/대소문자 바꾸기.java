@@ -4,18 +4,21 @@ import java.util.*;
 public class Main {
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String s = br.readLine();
 		StringBuilder sb = new StringBuilder();
 		
-		for(int i= 0; i<s.length();i++) {
-			char c = s.charAt(i);	
-			
-			if(Character.isUpperCase(c))
-				sb.append(Character.toLowerCase(c));
-			else sb.append(Character.toUpperCase(c));
-		}
+		String s = br.readLine();
 		
+		for(int i=0; i<s.length(); i++) {
+			char c = s.charAt(i);
+			if(!Character.isUpperCase(c)) {
+				char x = Character.toUpperCase(c);
+				sb.append(x);
+			}else if(!Character.isLowerCase(c)) {
+				char x = Character.toLowerCase(c);
+				sb.append(x);
+			}
+		}
 		System.out.println(sb);
+		
 	}
 }
