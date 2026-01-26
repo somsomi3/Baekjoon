@@ -10,16 +10,16 @@ public class Main {
         int M = Integer.parseInt(st.nextToken());
 
         int[][] arr = new int[N + 1][M + 1];
-        int[][] sum = new int[N + 1][M + 1];
+        int[][] dp = new int[N + 1][M + 1];
 
         for (int i = 1; i <= N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 1; j <= M; j++) {
                 arr[i][j] = Integer.parseInt(st.nextToken());
-                sum[i][j] =
-                        sum[i - 1][j]
-                      + sum[i][j - 1]
-                      - sum[i - 1][j - 1]
+                dp[i][j] =
+                        dp[i - 1][j]
+                      + dp[i][j - 1]
+                      - dp[i - 1][j - 1]
                       + arr[i][j];
             }
         }
@@ -35,14 +35,14 @@ public class Main {
             int y = Integer.parseInt(st.nextToken());
 
             int ans =
-                    sum[x][y]
-                  - sum[i - 1][y]
-                  - sum[x][j - 1]
-                  + sum[i - 1][j - 1];
+                    dp[x][y]
+                  - dp[i - 1][y]
+                  - dp[x][j - 1]
+                  + dp[i - 1][j - 1];
 
             sb.append(ans).append('\n');
         }
 
-        System.out.print(sb.toString());
+        System.out.print(sb);
     }
 }
