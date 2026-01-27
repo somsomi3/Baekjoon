@@ -13,7 +13,7 @@ public class Main {
 			int x = i*i+N;
 			int a = (int)Math.sqrt(x);
 			
-			if(a<=500 &&a>=i &&a*a==x) {
+			if(a<=500 &&a>i &&a*a==x) {
 				//A>B:  && a > i
 				//정수 문제에서는 반드시 역검증해야해서: &&a*a==x
 				cnt++;
