@@ -1,25 +1,24 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int[] a = new int[n];
-        for (int i =0; i<n; i++) {
-            a[i] = Integer.parseInt(br.readLine());
-        }
-
-        long ans = 0;
-
-        for (int i = n-2; i>=0; i--) {
-            if (a[i]>= a[i+1]) {
-                int t = a[i]-(a[i+1]-1);
-                ans += t;
-                a[i]= a[i+1]-1;
-            }
-        }
-
-        System.out.println(ans);
-    }
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		for(int i=0; i<N; i++ ) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+		
+		int cnt =0;
+		for(int i=N-1; i>0; i--) {
+			if(arr[i]<=arr[i-1]) {
+				int x = arr[i-1]- arr[i]+1;
+				cnt+=x;
+				arr[i-1]-=x;
+			}
+		}
+		System.out.println(cnt);
+	}
 }
