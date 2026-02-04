@@ -2,36 +2,37 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static void main(String[] args)throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-		int T = Integer.parseInt(br.readLine());
-		
-		while(T-->0) {
-			int N = Integer.parseInt(br.readLine());
-			
-			int[][] arr = new int[N][2];
+        int T = Integer.parseInt(br.readLine());
 
-			for (int i = 0; i < N; i++) {
-			    StringTokenizer st = new StringTokenizer(br.readLine());
-			    arr[i][0] = Integer.parseInt(st.nextToken()); // 서류
-			    arr[i][1] = Integer.parseInt(st.nextToken()); // 면접
-			}
+        while (T-- > 0) {
+            int N = Integer.parseInt(br.readLine());
 
-			Arrays.sort(arr, (a, b)-> a[0] -b[0]);
-			
-			int cnt =1;
-			int minishell = arr[0][1];
-			
-			for(int i =1; i<N; i++) {
-				if(arr[i][1]<minishell) {//더작아야
-					minishell = arr[i][1];
-					cnt++;//합격
-				}
-			}
-			
-			System.out.println(cnt);
-			
-		}
-	}
+            int[] arr = new int[N + 1];
+//정렬생략
+            for (int i = 0; i < N; i++) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                int doc = Integer.parseInt(st.nextToken());
+                int interview = Integer.parseInt(st.nextToken());
+                arr[doc] = interview;
+            }
+
+            int cnt = 1;
+            int minInterview = arr[1];
+
+            for (int i = 2; i <= N; i++) {
+                if (arr[i] < minInterview) {
+                    minInterview = arr[i];
+                    cnt++;
+                }
+            }
+
+            sb.append(cnt).append('\n');
+        }
+
+        System.out.print(sb);
+    }
 }
