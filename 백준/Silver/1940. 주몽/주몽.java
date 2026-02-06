@@ -2,9 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         int N = Integer.parseInt(br.readLine());
         int M = Integer.parseInt(br.readLine());
 
@@ -16,21 +15,20 @@ public class Main {
 
         Arrays.sort(arr);
 
-        int start = 0;
-        int end = N - 1;
+        int left = 0;
+        int right = N - 1;
         int count = 0;
 
-        while (start < end) {
-            int sum = arr[start] + arr[end];
-
-            if (sum < M) {
-                start++;
-            } else if (sum > M) {
-                end--;
-            } else {
+        while (left < right) {
+            int sum = arr[left] + arr[right];
+            if (sum == M) {
                 count++;
-                start++;
-                end--;
+                left++;
+                right--;
+            } else if (sum < M) {
+                left++;
+            } else {
+                right--;
             }
         }
 
