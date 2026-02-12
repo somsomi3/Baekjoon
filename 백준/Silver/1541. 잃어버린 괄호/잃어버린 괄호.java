@@ -1,32 +1,32 @@
-
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String expr = br.readLine();
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		String s = br.readLine();	
+		String[] arr = s.split("-");
+		
+		int ans = 0;
+		
+		//첫 뭉치
+		String[] one = arr[0].split("\\+");
+		for(String x: one) {
+			ans += Integer.parseInt(x);
+		}
+		
+		//나머지는 더하기 
+		for(int i = 1; i< arr.length; i++) {
+			String[] plus = arr[i].split("\\+");
+		    int sum = 0;
+		    
+		    for(String num : plus) {
+		        sum += Integer.parseInt(num);
+		    }
+		    ans -= sum;
+		}
 
-        // '-' 기준으로 나누기
-        String[] parts = expr.split("-");
-
-        int result = 0;
-
-        // 첫 번째 그룹(맨 앞)은 무조건 더하기
-        String[] first = parts[0].split("\\+");
-        for (String num : first) {
-            result += Integer.parseInt(num);
-        }
-
-        // 두 번째 그룹부터는 괄호로 묶인 효과 = 전부 빼기
-        for (int i = 1; i < parts.length; i++) {
-            String[] nums = parts[i].split("\\+");
-            int sum = 0;
-            for (String num : nums) {
-                sum += Integer.parseInt(num);
-            }
-            result -= sum;
-        }
-
-        System.out.println(result);
-    }
+		System.out.println(ans);
+	}
 }
