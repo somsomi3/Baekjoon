@@ -8,35 +8,36 @@ public class Main {
 		
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
-	
-		String[] set = new String[N];
-//		HashSet<String> set = new HashSet<>();
-		HashSet<String> set2 = new HashSet<>();
 		
-		for(int i=0; i<N; i++) {
-			set[i] = br.readLine();
-		}
-
-		for(int i =0; i<M; i++) {
-			set2.add(br.readLine());
+		HashSet<String> set = new HashSet<>();
+		List<String> ans = new ArrayList<>();
+		
+		for(int i = 0; i<N; i++) {
+			String s = br.readLine();
+			set.add(s);
 		}
 		
+		int cnt = 0;
 		
-        List<String> result = new ArrayList<>();
+		for(int i = 0; i<M; i++) {
+			String t = br.readLine();
+			
+			if(set.contains(t)) {
+				cnt++;
+				ans.add(t);
+			}
+		}
+		StringBuilder sb = new StringBuilder();
 		
+		System.out.println(cnt);
 		
-        for (int i = 0; i < N; i++) {
-            if (set2.contains(set[i])) {
-                result.add(set[i]);
-            }
-        }
-        Collections.sort(result);
-        StringBuilder sb = new StringBuilder();
-        sb.append(result.size()).append('\n');
-        for (String name : result) {
-            sb.append(name).append('\n');
+		//사전 순 출력,...
+		Collections.sort(ans);  // 사전순 정렬
+		
+		for(String s : ans) {
+            sb.append(s).append("\n");
         }
 
-        System.out.print(sb);
-    }
+		System.out.println(sb);
+	}
 }
