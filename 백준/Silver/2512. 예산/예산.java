@@ -2,51 +2,57 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int N, M;
+	static int N, chong;
 	static int[] arr;
-	
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		N = Integer.parseInt(br.readLine());
 		
-		arr = new int[N];
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int sum =0;
+		int sum = 0;
+		int max = 0;
+		
+		arr = new int[N];
 		for(int i =0; i<N; i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
-			sum+= arr[i];
+			sum += arr[i];
+			max = Math.max(max, arr[i]);
 		}
-		M =Integer.parseInt(br.readLine());
-		
 		Arrays.sort(arr);
-
-		if(sum<=M)System.out.println(arr[N-1]);
 		
-		else {
-			int left =0;
+		chong = Integer.parseInt(br.readLine());
+		
+		int ans = 0;
+		if(chong>=sum) {
+			System.out.println(max);
+		}else {
+			int left = 0;
 			int right = arr[N-1];
-			int ans = 0;
 			
 			while(left<=right) {
 				int mid = (left+right)/2;
-				if (canMoney(mid) <= M){
+				
+				if(canMid(mid)<=chong) {
 					ans = mid;
 					left = mid+1;
-				}else {
+				}else if(canMid(mid)>chong) {
 					right = mid-1;
 				}
-			}System.out.println(ans);
+			}
+			System.out.println(ans);
 		}
-		
-		
 	}
-	static int canMoney(int mid) {
-		int canSum =0;
-		for(int i=0; i<N; i++) {
-			if(arr[i]<=mid)canSum+=arr[i];
-			else canSum+=mid;
+	static int canMid(int target) {
+		int summ = 0;
+		for(int i =0; i<N; i++) {
+			if(arr[i]<=target) {
+				summ+= arr[i];
+			}else {
+				summ+=target;
+			}
 		}
-		return canSum;
+		
+		return summ;
 	}
 }
