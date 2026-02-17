@@ -2,46 +2,49 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, H;
-    static int[] down, up;
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        H = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int H = Integer.parseInt(st.nextToken());
 
-        down = new int[H + 2];
-        up = new int[H + 2];
+        int[] bottom = new int[H + 2];
+        int[] top = new int[H + 2];
 
+        // 입력
         for (int i = 0; i < N; i++) {
-            int h = Integer.parseInt(br.readLine());
+            int len = Integer.parseInt(br.readLine());
+
             if (i % 2 == 0) {
-                down[h]++;
+                bottom[len]++;//길이 위치만 +1
             } else {
-                up[h]++;
+                top[len]++;//길이 위치만 +1
             }
         }
 
+        // 뒤에서부터 누적합
         for (int i = H - 1; i >= 1; i--) {
-            down[i] += down[i + 1];
-            up[i] += up[i + 1];
+            bottom[i] += bottom[i + 1];
+            top[i] += top[i + 1];
         }
 
         int min = Integer.MAX_VALUE;
         int count = 0;
 
+        // 각 높이에서 충돌 개수 계산
         for (int h = 1; h <= H; h++) {
-            int crash = down[h] + up[H - h + 1];
-            if (crash < min) {
-                min = crash;
+            int x = bottom[h] + top[H - h + 1];
+
+            if (x < min) {
+                min = x;
                 count = 1;
-            } else if (crash == min) {
+            } else if (x == min) {
                 count++;
             }
         }
 
         System.out.println(min + " " + count);
     }
+
 }
