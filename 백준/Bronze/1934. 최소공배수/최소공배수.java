@@ -7,27 +7,23 @@ public class Main {
 		
 		int N = Integer.parseInt(br.readLine());
 		
-		for(int i =0; i<N; i++) {
+		for(int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
 			
-			
 			int g = gcd(a, b);
-			int l = a*b/g;// g최대공약수는 1이 제일 작다.그래서 0으로 나누기걱정은 안해도될듯하다.
-			
+			int l = (a*b)/g;
 			System.out.println(l);
 		}
-		
 	}
-	static int gcd(int a, int b) {
-		while(b>0) {
-			int r = a%b;
-			a = b;
-			b = r;
+	
+	static int gcd(int x, int y) {
+		while(y>0) {
+			int r = x % y;
+			x = y;
+			y = r;
 		}
-		return a;
+		return x;
 	}
-	
-	
 }
