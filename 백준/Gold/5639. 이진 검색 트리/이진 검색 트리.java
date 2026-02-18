@@ -1,55 +1,34 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    static class Node {
-        int val;
-        Node left, right;
-
-        public Node(int val) {
-            this.val = val;
-        }
-
-        public void insert(int num) {
-            if (num < this.val) {
-                if (this.left == null) {
-                    this.left = new Node(num);
-                } else {
-                    this.left.insert(num);
-                }
-            } else {
-                if (this.right == null) {
-                    this.right = new Node(num);
-                } else {
-                    this.right.insert(num);
-                }
-            }
-        }
-    }
-
+    static ArrayList<Integer> list = new ArrayList<>();
     static StringBuilder sb = new StringBuilder();
 
-    public static void postorder(Node node) {
-        if (node == null) return;
-        postorder(node.left);
-        postorder(node.right);
-        sb.append(node.val).append("\n");
-    }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        Node root = null;
-        String input;
-        while ((input = br.readLine()) != null && !input.equals("")) {
-            int num = Integer.parseInt(input);
-            if (root == null) {
-                root = new Node(num);
-            } else {
-                root.insert(num);
-            }
+
+        String s;
+        while ((s = br.readLine()) != null) {
+            list.add(Integer.parseInt(s));
         }
 
-        postorder(root);
-        System.out.println(sb);
+        solve(0, list.size() - 1);
+        System.out.print(sb);
+    }
+
+    static void solve(int start, int end) {
+        if (start > end) return;
+        int root = list.get(start);
+        int cut = start + 1;
+             
+        //왼쪽 subtree가 끝나는 지점 찾는 코드
+        while (cut <= end && list.get(cut) < root) {//배열범위와 경계
+            cut++;
+        }
+
+        solve(start + 1, cut - 1);
+        solve(cut, end);
+        sb.append(root).append("\n");
     }
 }
