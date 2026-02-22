@@ -11,17 +11,6 @@ public class Main {
 
     static int N, M;
 
-    static class Node {
-        int x, y, state, step;
-
-        Node(int x, int y, int state, int step) {
-            this.x = x;
-            this.y = y;
-            this.state = state;
-            this.step = step;
-        }
-    }
-
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -30,7 +19,7 @@ public class Main {
         M = Integer.parseInt(st.nextToken());
 
         graph = new int[N][M];
-        visited = new boolean[N][M][2];
+        visited = new boolean[2][N][M]; // 상태를 앞으로
 
         for (int i = 0; i < N; i++) {
             String s = br.readLine();
@@ -43,33 +32,37 @@ public class Main {
     }
 
     static int bfs() {
-        ArrayDeque<Node> q = new ArrayDeque<>();
-        q.offer(new Node(0, 0, 0, 1));
+        ArrayDeque<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{0, 0, 0, 1}); // x, y, state, step
         visited[0][0][0] = true;
 
         while (!q.isEmpty()) {
-            Node cur = q.poll();
+            int[] cur = q.poll();
+            int x = cur[0];
+            int y = cur[1];
+            int state = cur[2];
+            int step = cur[3];
 
-            if (cur.x == N - 1 && cur.y == M - 1) {
-                return cur.step;
+            if (x == N - 1 && y == M - 1) {
+                return step;
             }
 
             for (int d = 0; d < 4; d++) {
-                int nx = cur.x + dx[d];
-                int ny = cur.y + dy[d];
+                int nx = x + dx[d];
+                int ny = y + dy[d];
 
                 if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
 
                 // 빈 칸
-                if (graph[nx][ny] == 0 && !visited[nx][ny][cur.state]) {
-                    visited[nx][ny][cur.state] = true;
-                    q.offer(new Node(nx, ny, cur.state, cur.step + 1));
+                if (graph[nx][ny] == 0 && !visited[state][nx][ny]) {
+                    visited[state][nx][ny] = true;
+                    q.offer(new int[]{nx, ny, state, step + 1});
                 }
 
                 // 벽이고 아직 안 부쉈다면
-                if (graph[nx][ny] == 1 && cur.state == 0 && !visited[nx][ny][1]) {
-                    visited[nx][ny][1] = true;
-                    q.offer(new Node(nx, ny, 1, cur.step + 1));
+                if (graph[nx][ny] == 1 && state == 0 && !visited[1][nx][ny]) {
+                    visited[1][nx][ny] = true;
+                    q.offer(new int[]{nx, ny, 1, step + 1});
                 }
             }
         }
