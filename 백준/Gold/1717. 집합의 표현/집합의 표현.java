@@ -2,49 +2,53 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int[] parent, size;
+	
+	static int[] parent;
 
-    static int find(int x) {
-        if (parent[x] == x) return x;
-        return parent[x] = find(parent[x]);
-    }
+	static void union(int a, int b) {
+	    int rootA = find(a);
+	    int rootB = find(b);
 
-    static void union(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if (a == b) return;
-        if (size[a] < size[b]) {
-            int t = a;
-            a = b;
-            b = t;
-        }
-        parent[b] = a;
-        size[a] += size[b];
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-
-        parent = new int[n + 1];
-        size = new int[n + 1];
-        for (int i = 0; i <= n; i++) {
-            parent[i] = i;
-            size[i] = 1;
-        }
-
+	    if (rootA != rootB) {
+	        parent[rootB] = rootA;
+	    }
+	}
+	static int find(int x) {
+	    if (parent[x] == x) return x;
+	    return parent[x] = find(parent[x]); // 경로 압축
+	}
+	
+	
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < m; i++) {
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+
+		parent = new int[N+1];
+		
+		for (int i = 0; i <= N; i++)
+		    parent[i] = i;
+
+        while (M-- > 0) {
             st = new StringTokenizer(br.readLine());
-            int op = Integer.parseInt(st.nextToken());
+
+            int command = Integer.parseInt(st.nextToken());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            if (op == 0) union(a, b);
-            else sb.append(find(a) == find(b) ? "YES\n" : "NO\n");
+            if (command == 0) {
+                union(a, b);
+            } else {
+                if (find(a) == find(b)) {
+                    sb.append("YES\n");
+                } else {
+                    sb.append("NO\n");
+                }
+            }
         }
+
         System.out.print(sb);
     }
 }
