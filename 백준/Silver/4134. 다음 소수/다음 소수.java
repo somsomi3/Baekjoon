@@ -1,13 +1,14 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
+
     static boolean isPrime(long x) {
-        if (x < 2) return false;
-        for (long i = 2; i * i <= x; i++) {
+        if (x == 2) return true;
+        if (x < 2 || x % 2 == 0) return false;
+
+        for (long i = 3; i * i <= x; i += 2) {
             if (x % i == 0) return false;
         }
-        //나눠지지 않아야 소수
         return true;
     }
 
@@ -20,8 +21,11 @@ public class Main {
         while (T-- > 0) {
             long n = Long.parseLong(br.readLine());
 
+            if (n <= 2) n = 2;
+            else if (n % 2 == 0) n++;  // 짝수면 바로 홀수로
+
             while (!isPrime(n)) {
-                n++;
+                n += 2;               // 홀수만 검사
             }
 
             sb.append(n).append('\n');
