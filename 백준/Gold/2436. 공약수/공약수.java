@@ -13,7 +13,8 @@ public class Main {
 
         long a = 1, b = x;
 
-        for(long i = 1; i * i <= x; i++) {
+        for(long i = 1; i * i <= x; i++) {//i는 작은 약수부터 증가
+    	//자동으로 마지막에 30 36 이렇게 차이가 적은 값이 남게 된다.
             if(x % i == 0) {
                 long j = x / i;
 
