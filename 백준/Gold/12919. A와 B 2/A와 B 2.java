@@ -2,8 +2,7 @@ import java.io.*;
 
 public class Main {
     static String S, T;
-    static boolean ok = false;
-
+    static int result = 0;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         S = br.readLine();
@@ -11,24 +10,21 @@ public class Main {
 
         dfs(T);
 
-        System.out.println(ok ? 1 : 0);
+        System.out.println(result);
     }
 
-    static void dfs(String cur) {
-        if (ok) return;
-
-        if (cur.length() == S.length()) {
-            if (cur.equals(S)) ok = true;
+    static void dfs(String T) {
+        if (T.length() == S.length()) {
+            if (T.equals(S)) result = 1;
             return;
         }
-
-        if (cur.charAt(cur.length() - 1) == 'A') {
-            dfs(cur.substring(0, cur.length() - 1));
+        if (T.charAt(T.length() - 1) == 'A') {
+            dfs(T.substring(0, T.length() - 1));
         }
-
-        if (cur.charAt(0) == 'B') {
-            StringBuilder sb = new StringBuilder(cur.substring(1));
-            dfs(sb.reverse().toString());
+        if (T.charAt(0) == 'B') {
+            StringBuilder sb = new StringBuilder(T);
+            sb.reverse();
+            dfs(sb.substring(0, sb.length() - 1));
         }
     }
 }
