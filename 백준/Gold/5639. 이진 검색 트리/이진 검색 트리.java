@@ -2,33 +2,38 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static ArrayList<Integer> list = new ArrayList<>();
-    static StringBuilder sb = new StringBuilder();
-
+    static List<Integer> list = new ArrayList<>();
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        String s;
-        while ((s = br.readLine()) != null) {
+        
+        while (true) {
+            String s = br.readLine();
+            if (s == null) break;
+            if (s == null || s.isEmpty()) break;
             list.add(Integer.parseInt(s));
         }
-
-        solve(0, list.size() - 1);
-        System.out.print(sb);
+        postOrder(0, list.size() - 1);
     }
 
-    static void solve(int start, int end) {
+    static void postOrder(int start, int end) {
         if (start > end) return;
+
         int root = list.get(start);
-        int cut = start + 1;
-             
-        //왼쪽 subtree가 끝나는 지점 찾는 코드
-        while (cut <= end && list.get(cut) < root) {//배열범위와 경계
-            cut++;
+
+        int idx = start + 1;
+
+        // 오른쪽시작지점 찾기
+        while (idx <= end && list.get(idx) < root) {
+            idx++;
         }
 
-        solve(start + 1, cut - 1);
-        solve(cut, end);
-        sb.append(root).append("\n");
+        // 왼쪽
+        postOrder(start + 1, idx - 1);
+
+        // 오른쪽
+        postOrder(idx, end);
+
+        // 루트 출력
+        System.out.println(root);
     }
 }
