@@ -1,62 +1,51 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    static final InputStream in = System.in;
-    static final byte[] buffer = new byte[1 << 16];
-    static int ptr = 0, len = 0;
+    static int N, M;
+    static int[] arr;
 
-    static int read() throws IOException {
-        if (ptr >= len) {
-            len = in.read(buffer);
-            ptr = 0;
-            if (len <= 0) return -1;
-        }
-        return buffer[ptr++];
-    }
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    static int nextInt() throws IOException {
-        int c, val = 0, sign = 1;
-        do { c = read(); } while (c <= 32);
-        if (c == '-') { sign = -1; c = read(); }
-        while (c > 32) {
-            val = (val << 3) + (val << 1) + (c & 15);
-            c = read();
-        }
-        return val * sign;
-    }
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-    public static void main(String[] args) throws IOException {
-        int n = nextInt(); // 나무 수
-        int m = nextInt(); // 필요한 길이
-        int[] trees = new int[n];
+        arr = new int[N];
 
-        int max = 0;
-        for (int i = 0; i < n; i++) {
-            trees[i] = nextInt();
-            if (trees[i] > max) max = trees[i];
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int left = 0, right = max, answer = 0;
+        Arrays.sort(arr);
 
-        while (left <= right) {
-            int mid = (left + right) >>> 1;
+        int left = 0;
+        int right = arr[N - 1];
+        int ans = 0;
 
-            if (canCut(trees, m, mid)) {
-                answer = mid;
+        while (left <= right) {//탐색 구간을 “완전히 다 보기 위해서” <=를 쓴다
+            int mid = (left + right) / 2;
+
+            if (canCut(mid) >= M) {//배열에 있는 값이 아닌, 그 값 그자체를 넣어서 따질수 있어야함.
+                ans = mid;//그 값 그자체
                 left = mid + 1;
             } else {
                 right = mid - 1;
             }
         }
 
-        System.out.println(answer);
+        System.out.println(ans);
     }
 
-    static boolean canCut(int[] trees, int m, int mid) {
-        long total = 0;
-        for (int tree : trees) {
-            if (tree > mid) total += (tree - mid);
+    static long canCut(int h) {
+        long sum = 0;
+        for (int i = 0; i < N; i++) {
+            if (arr[i] > h) {
+                sum += arr[i] - h;
+            }
         }
-        return total >= m;
+        return sum;
     }
 }
