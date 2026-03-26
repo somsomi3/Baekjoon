@@ -2,25 +2,47 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-
-        int[][] arr = new int[N][2];
-        for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            arr[i][0] = Integer.parseInt(st.nextToken()); //시작 시간
-            arr[i][1] = Integer.parseInt(st.nextToken()); //종료 시간
-        }
-
-        Arrays.sort(arr, (a, b) -> a[0] - b[0]); //시작시간기준 정렬
-
+	static class Lecture{
+		int start, end;
+		Lecture(int start, int end){
+			this.start = start;
+			this.end = end;
+		}
+	}
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		int N = Integer.parseInt(br.readLine());
+		
+		//데이터 묶음
+		//배열이 리스트 보다 빠르고 간단
+		Lecture[] arr= new Lecture[N];
+		
+		
+		for(int i =0; i< N; i++) {
+			//여러줄에 걸쳐서 강의 가 들어오므로 StringTokenizer가 for문 안에 있도록 한다.
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			
+			arr[i] = new Lecture(a, b);
+		}
+		
+		Arrays.sort(arr, (x, y)->{
+			if(x.start ==y.start)return x.end- y.end;
+			return x.start - y.start;
+		});
+		
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        pq.add(arr[0][1]);
+
+        pq.offer(arr[0].end);
 
         for (int i = 1; i < N; i++) {
-            if (pq.peek() <= arr[i][0]) pq.poll(); //가장 빨리 끝나는 강의실이 비면 재사용
-            pq.add(arr[i][1]); //새 강의 배정
+            // 가장 빨리 끝나는 강의
+            if (pq.peek() <= arr[i].start) {
+                pq.poll(); // 재사용
+            }
+            pq.offer(arr[i].end);
         }
 
         System.out.println(pq.size());
