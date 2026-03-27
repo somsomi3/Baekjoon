@@ -27,7 +27,7 @@ public class Main {
         while(left <= right) {
             long mid = (left + right) / 2;
 			
-			if(canCut((int)mid)>= M) {
+			if(canCut(mid)>= M) {
 				ans = mid;
 				left = mid+1;
 			}else {
@@ -37,7 +37,7 @@ public class Main {
 		System.out.println(ans);
 		
 	}
-    static long canCut(int target) {
+    static long canCut(long target) {
         long sum = 0;
 		for(int i = 0; i<N; i++) {
             sum += arr[i]/ target;
