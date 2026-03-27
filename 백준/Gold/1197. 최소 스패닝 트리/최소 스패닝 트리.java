@@ -2,64 +2,66 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int V, E;
-    static List<Edge>[] graph;
-    static boolean[] visited;
+	static class Edge{
+		int from, to, cost;
+		Edge(int from, int to, int cost){
+			this.from = from;
+			this.to = to;
+			this.cost = cost;
+		}
+	}
+	
+	static int[] parent;
+	
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int V = Integer.parseInt(st.nextToken());
+		int E = Integer.parseInt(st.nextToken());
+		
+		Edge[] edges = new Edge[E];
+		
+		for(int i = 0; i< E; i++) {
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+			
+			edges[i] = new Edge(a, b, c);
+		}
+		
+		Arrays.sort(edges, (a, b)-> a.cost - b.cost);
+		
+		parent = new int[V + 1];
+        for (int i = 1; i <= V; i++) parent[i] = i;
 
-    static class Edge implements Comparable<Edge> {
-        int to, weight;
+        long result = 0;
+        int cnt = 0;
 
-        Edge(int to, int weight) {
-            this.to = to;
-            this.weight = weight;
+        for (Edge e : edges) {
+        	if(find(e.from)!= find(e.to)) {
+        		union(e.from, e.to);
+        		result += e.cost;
+        		cnt++;
+        		
+        		if(cnt == V-1)break;
+        	}
         }
-
-        public int compareTo(Edge o) {
-            return this.weight - o.weight; // 가중치 오름차순
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-
-        st = new StringTokenizer(br.readLine());
-        V = Integer.parseInt(st.nextToken());
-        E = Integer.parseInt(st.nextToken());
-
-        graph = new ArrayList[V + 1];
-        visited = new boolean[V + 1];
-        for (int i = 1; i <= V; i++) graph[i] = new ArrayList<>();
-
-        for (int i = 0; i < E; i++) {
-            st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            int weight = Integer.parseInt(st.nextToken());
-            graph[from].add(new Edge(to, weight));
-            graph[to].add(new Edge(from, weight)); // 무방향
-        }
-
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
-        int total = 0;
-
-        pq.offer(new Edge(1, 0)); // 시작 정점(1번)에서 시작
-
-        while (!pq.isEmpty()) {
-            Edge cur = pq.poll();
-
-            if (visited[cur.to]) continue; // 이미 방문했으면 스킵
-            visited[cur.to] = true;
-            total += cur.weight;
-
-            // 현재 정점에서 연결된 간선을 모두 pq에 넣음
-            for (Edge next : graph[cur.to]) {
-                if (!visited[next.to]) {
-                    pq.offer(next);
-                }
-            }
-        }
-
-        System.out.println(total);
-    }
+        System.out.println(result);
+		
+	}
+	
+	static void union(int a, int b) {
+		int rootA = find(a);
+		int rootB = find(b);
+		
+		if(rootA != rootB) {
+			parent[rootB]= rootA;
+		}
+	}
+	static int find(int x) {
+		if(parent[x]==x)return x;
+		return parent[x]= find(parent[x]);
+	}
 }
