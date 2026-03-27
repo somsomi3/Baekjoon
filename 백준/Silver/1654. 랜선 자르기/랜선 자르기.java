@@ -1,72 +1,47 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    static final InputStream in = System.in;
-    static final byte[] buf = new byte[1 << 16];
-    static int ptr = 0, len = 0;
-
-    static int read() throws IOException {
-        if (ptr == len) {
-            len = in.read(buf);
-            ptr = 0;
-            if (len == -1) return -1;
-        }
-        return buf[ptr++];
-    }
-
-    static int nextInt() throws IOException {
-        int c, sign = 1, val = 0;
-
-        // 공백 넘기기
-        do {
-            c = read();
-        } while (c <= 32);
-
-
-        if (c == '-') {
-            sign = -1;
-            c = read();
-        }
-        while (c > 32) {
-            val = (val << 3) + (val << 1) + (c - '0');
-            c = read();
-        }
-
-        return val * sign;
-    }
-
-    public static void main(String[] args) throws IOException {
-        int K = nextInt();
-        int N = nextInt();
-
-        int[] cables = new int[K];
-        long max = 0;
-
-        for (int i = 0; i < K; i++) {
-            cables[i] = nextInt();
-            if (cables[i] > max) max = cables[i];
-        }
-
+	static int N, M; 
+	static int[] arr;
+	
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		
+		arr= new int[N];
+		
+		int max = 0;
+		for(int i = 0; i <N; i++) {//long으로 입력 받아야 하나? 2의 32승은 얼마지?
+			arr[i] = Integer.parseInt(br.readLine());
+			max = Math.max(max, arr[i]);
+		}
+		
         long left = 1;
         long right = max;
-        long answer = 0;
+        long ans = 0;
 
-        while (left <= right) {
-            long mid = left + ((right - left) >> 1);
-            long count = 0;
-
-            for (int len : cables) {
-                count += len / mid;
-            }
-
-            if (count >= N) {
-                answer = mid;
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
+        while(left <= right) {
+            long mid = (left + right) / 2;
+			
+			if(canCut((int)mid)>= M) {
+				ans = mid;
+				left = mid+1;
+			}else {
+				right = mid -1;
+			}
+		}
+		System.out.println(ans);
+		
+	}
+    static long canCut(int target) {
+        long sum = 0;
+		for(int i = 0; i<N; i++) {
+            sum += arr[i]/ target;
         }
-
-        System.out.println(answer);
-    }
+		return sum;
+	}
 }
