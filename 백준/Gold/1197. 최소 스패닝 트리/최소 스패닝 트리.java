@@ -10,17 +10,23 @@ public class Main {
 			this.cost = cost;
 		}
 	}
-	
 	static int[] parent;
+	
+	static int V, E;
 	
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		int V = Integer.parseInt(st.nextToken());
-		int E = Integer.parseInt(st.nextToken());
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		
+		parent = new int[V+1];
+		for(int i = 0; i<=V; i++)parent[i] = i;
 		
 		Edge[] edges = new Edge[E];
+		
+		PriorityQueue<Edge> pq = new PriorityQueue<>((o1,o2)->o1.cost - o2.cost);
 		
 		for(int i = 0; i< E; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -28,40 +34,38 @@ public class Main {
 			int b = Integer.parseInt(st.nextToken());
 			int c = Integer.parseInt(st.nextToken());
 			
-			edges[i] = new Edge(a, b, c);
+//			edges[i] = new Edge(a, b, c);
+			pq.offer(new Edge(a, b, c));
 		}
+	
 		
-		Arrays.sort(edges, (a, b)-> a.cost - b.cost);
+		int result = 0;
 		
-		parent = new int[V + 1];
-        for (int i = 1; i <= V; i++) parent[i] = i;
-
-        long result = 0;
-        int cnt = 0;
-
-        for (Edge e : edges) {
-        	if(find(e.from)!= find(e.to)) {
-        		union(e.from, e.to);
-        		result += e.cost;
-        		cnt++;
-        		
-        		if(cnt == V-1)break;
-        	}
-        }
-        System.out.println(result);
+		
+		
+		while(!pq.isEmpty()) {
+			Edge cur = pq.poll();
+			
+			if(find(cur.from)!=find(cur.to)) {
+				union(cur.from, cur.to);
+				result += cur.cost;
+			}
+		}
+		System.out.println(result);
 		
 	}
-	
 	static void union(int a, int b) {
 		int rootA = find(a);
 		int rootB = find(b);
-		
 		if(rootA != rootB) {
-			parent[rootB]= rootA;
+			parent[rootB] = rootA;
 		}
+		
 	}
 	static int find(int x) {
 		if(parent[x]==x)return x;
-		return parent[x]= find(parent[x]);
+		return parent[x] = find(parent[x]);
 	}
+	
+	
 }
