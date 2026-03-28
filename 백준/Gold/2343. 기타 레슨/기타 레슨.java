@@ -2,60 +2,58 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int[] arr;
 	static int N, M;
-	static int sum =0;
+	static int[] arr;
 	
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		N = Integer.parseInt(st.nextToken());
-		M= Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 		
-		arr = new int[N];
-		st = new StringTokenizer(br.readLine());
-        int left = 0;
-        for(int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-            sum += arr[i];
-            left = Math.max(left, arr[i]);   //최소값은 최대 강의 길이
-        }
-		//한개는 무조건 들어가야 하므로, 그중에서 최소 값을 left로 둬야한다. 어제 푼 용돈관리랑 같음 
-        
-        int right = sum;
-        //ans가 sum부터 시작하는 이유는, mid중에 가장 큰 값이라.
-        int ans = sum;
+		arr= new int[N];
+		int sum = 0;
+		int max = 0;
+		st= new StringTokenizer(br.readLine());
+		for(int i = 0; i<N; i++) {
+			arr[i]= Integer.parseInt(st.nextToken());
+			sum+= arr[i];
+            max = Math.max(max, arr[i]);
+		}
 		
-		while(left<=right) {
-            int mid = (left + right) / 2;
+		//강의는 순서대로 담아야함. 그리고 배열안에서 값을 고를 필요없음.
+//		Arrays.sort(arr);
 		
-            if(canCut(mid)) {
-            	//M개 이하로도 가능하면, 더 쪼개서(= mid가 더 작아져야함.) M개로 만드는 건 언제든 가능하기 때문
-                ans = mid;
-                right = mid - 1;// 갯수가 작거나 같다는 것은, 합계가 너무 크다는 것. 따라서 범위를 줄여야한다. 
-            } else {
-                left = mid + 1;
-            }
-        }
-
-        System.out.println(ans);
+        int left = max;//mid로 나눌일은 없다.
+		int right = sum;
+		int ans = 0;
+		
+		while(left<= right) {//특점 값을 찾는다.
+			int mid = (left + right) /2;
+			
+			//M개 이하!!
+			if(canFind(mid) <= M) {
+				ans = mid;
+				right = mid -1;//더작은 mid를 향해 가므로, ans에 Math.min은 필요없다.
+			}else {
+				left = mid+1;
+			}
+		}
+		System.out.println(ans);
 	}
-	static boolean canCut(int mid) {
-		//무조건 2개 들어가 있음.
-        int count = 1;
-        int cutSum = 0;
-
-		for(int i= 0; i<N; i++) {
-            if(cutSum + arr[i] > mid) {
-                count++;
-                cutSum = arr[i];
-            } else {
-                cutSum += arr[i];
-            }
-        }
-
-        return count <= M;//M개 이하로도 가능하면, 더 쪼개서 M개로 만드는 건 언제든 가능하기 때문
+	static int canFind(int target) {
+	    int cnt = 1;
+	    int sum = 0;
+	
+	    for(int i = 0; i < N; i++) {
+	        if(sum + arr[i] > target) {
+	            cnt++;
+	            sum = arr[i];
+	        } else {
+	            sum += arr[i];
+	        }
+	    }
+	    return cnt;
 	}
-
 }
