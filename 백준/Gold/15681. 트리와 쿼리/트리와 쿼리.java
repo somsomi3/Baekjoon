@@ -2,56 +2,71 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	static int N, R, Q;
 	static List<Integer>[] graph;
+	static int[] tree;
+	static int[] parent;
 	static boolean[] visited;
-	static int[] dist;
-	static int[] child;
 	
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
 		
-		int N= Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());
+		R = Integer.parseInt(st.nextToken());
+		Q = Integer.parseInt(st.nextToken());
 		
-		//graph visited dist child
 		graph = new ArrayList[N+1];
-		for(int i=1; i<=N; i++)graph[i] = new ArrayList<>(); //그래프의 인덱스는 1부터 시작한다.
+		for(int i = 1; i<=N; i++)graph[i] = new ArrayList<>();
+		
+		parent = new int[N + 1];
+		tree = new int[N+1];
+		for(int i = 1; i<= N; i++) {
+			parent[i] = i;
+			tree[i] = 1;//가중치가 다 1
+		}
 		visited = new boolean[N+1];
-		dist = new int[N+1];
-		child = new int[N+1];
 		
-		int R = Integer.parseInt(st.nextToken());
-		int Q = Integer.parseInt(st.nextToken());
-		
-		//가중치와 방향성이 없음.
-		for(int i=0; i<N-1; i++) {//트리의 간선은 항상 N-1개이다.
+		for(int i = 0; i < N-1; i++) {
 			st = new StringTokenizer(br.readLine());
-			int u = Integer.parseInt(st.nextToken());
-			int v = Integer.parseInt(st.nextToken());
+			int U = Integer.parseInt(st.nextToken());
+			int V = Integer.parseInt(st.nextToken());
 			
-			graph[u].add(v);
-			graph[v].add(u);
+			//트리는 양방향?
+			graph[U].add(V);
+			graph[V].add(U);
+			
 		}
-		dfs(R);// 루트에서 시작한다.
 		
+		dfs(R);
 		
-		for(int i= 0; i<Q; i++) {
+		for(int i = 0; i<Q; i++) {
 			int x = Integer.parseInt(br.readLine());
-			System.out.println(child[x]);
+			sb.append(tree[x]).append("\n");
 		}
-	}
-	static void dfs(int cur) {
-		visited[cur] = true;
-		child[cur] = 1;// 이걸 dfs(R)호출전에 넣고 호출해야 하나? 
-		//왜냐면 항상 초기화 하면 안되잖아..? 아.. 항상 초기화 해야 각각의 nxt값만 더하는듯.
+		System.out.println(sb);
 		
-		for(int nxt: graph[cur]) {
-			if(!visited[nxt]) {
-				//nxt들 다돌고 와서
-				dfs(nxt);
-				//child[cur]에 child[nxt]를 더해주자.
-				child[cur] +=child[nxt];
+	}
+	//일단은 tree안쓰고 큐를 써서 해도 되지않을가. parent가 visited역할을 하니까.
+	//아냐 누적할게 없네.
+	static void dfs(int start) {
+		Queue<Integer>q = new ArrayDeque<>();
+		q.offer(start);
+		visited[start] = true;
+		
+		while(!q.isEmpty()) {
+			int cur = q.poll();
+			
+			for(int next: graph[cur]) {
+				if(!visited[next]) {
+					dfs(next);
+					tree[cur]+= tree[next];
+//					q.offer(next); //=>이건 굳이 있어야할 이유가...
+				}
 			}
 		}
+		
 	}
+	
 }
