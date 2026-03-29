@@ -2,36 +2,38 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-
-        Set<String> set = new HashSet<>();
-
-        for (int i = 0; i < N; i++) {
-            set.add(br.readLine());
-        }
-
-        List<String> result = new ArrayList<>();
-
-        for (int i = 0; i < M; i++) {
-            String s = br.readLine();
-            if (set.contains(s)) {
-                result.add(s);
-            }
-        }
-
-        Collections.sort(result);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(result.size()).append("\n");
-        for (String s : result) {
-            sb.append(s).append("\n");
-        }
-
-        System.out.print(sb);
-    }
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
+		
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		
+		HashSet<String> set = new HashSet<>();
+		
+		for(int i = 0; i < N; i++) {
+			String s = br.readLine();
+		
+			set.add(s);
+		}
+		
+		List<String> list = new ArrayList<>();
+		
+		for(int i = 0; i<M; i++) {
+			String t = br.readLine();
+			if(set.contains(t))list.add(t);
+		}
+		
+		sb.append(list.size()).append("\n");
+		
+		list.sort((a, b)-> a.compareTo(b));
+		
+		//list 안에 있는거 어떻게 꺼내지..?
+		
+		for(int i = 0; i<list.size(); i++) {
+			sb.append(list.get(i)).append("\n");
+		}
+		System.out.println(sb);
+	}
 }
