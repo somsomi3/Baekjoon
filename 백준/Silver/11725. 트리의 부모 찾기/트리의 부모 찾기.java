@@ -2,9 +2,10 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int N;
 	static List<Integer>[] graph;
+	static int N;
 	static boolean[] visited;
+	
 	static int[] parent;
 	
 	public static void main(String[] args)throws IOException{
@@ -12,33 +13,35 @@ public class Main {
 		
 		N = Integer.parseInt(br.readLine());
 		
-		graph = new ArrayList[N+1];
-		for(int i = 1 ; i<= N; i++)graph[i] = new ArrayList<>();
+		graph = new ArrayList[N + 1];
+		for(int i = 1; i<= N; i++)graph[i] = new ArrayList<>();
+		visited = new boolean[N + 1];
 		parent = new int[N+1];
-		visited = new boolean[N+1];
+		for(int i = 1; i<= N; i++)parent[i] = i;
 		
-		for(int i = 0; i<N-1 ; i++) {
+		for(int i = 0; i <N-1; i++) {//N-1개다!! 주의!!
 			StringTokenizer st = new StringTokenizer(br.readLine());
+			
 			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());	
 			
 			graph[a].add(b);
 			graph[b].add(a);
 			
 		}
 		
-		lca(1);
+		findParent(1);//시작점 1
 		
 		StringBuilder sb = new StringBuilder();
-		for(int i =2; i<=N; i++) {
+		for(int i = 2;i<= N; i++) {
 			sb.append(parent[i]).append("\n");
 		}
 		System.out.println(sb);
 	}
-	static void lca(int start) {
+	static void findParent(int start) {
 		Queue<Integer> q = new ArrayDeque<>();
-		visited[start] = true;
 		q.offer(start);
+		visited[start] = true;
 		
 		while(!q.isEmpty()) {
 			int cur = q.poll();
@@ -50,7 +53,7 @@ public class Main {
 					q.offer(next);
 				}
 			}
+			
 		}
-		
 	}
-}
+}	
