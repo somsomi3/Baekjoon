@@ -2,59 +2,67 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+	static int N, M; 
+	static int[] arr;
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
-        
-		int N = Integer.parseInt(st.nextToken());
+		StringBuilder sb = new StringBuilder();
 		
-		int M = Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 		
-		int[] arr = new int[N];
+		arr = new int[N];
 		st = new StringTokenizer(br.readLine());
-		for(int i=0; i<N; i++) {
+		for(int i = 0; i<N; i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
-		Arrays.sort(arr); 
 		
-		for(int i=0; i<M; i++) {
+		Arrays.sort(arr);
+		
+	
+		for(int i = 0; i<M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int end = Integer.parseInt(st.nextToken());
+			int x = Integer.parseInt(st.nextToken());
+			int y = Integer.parseInt(st.nextToken());
 			
+			int l = findLeft(x);
+			int r = findRight(y);
 			
-			int left = 0;
-			int right = N;
-			//끝점을 N으로 두는 이유는
-//			“정답이 N이 될 수도 있기 때문”
+			int ans = r-l;
 			
-			while(left<right) {
-				int mid = (left+right)/2;
-				
-				if(arr[mid]<start) {
-					left= mid+1;
-				}else right =mid;
-			}
-			int lower = left;
-			
-			//초기화 빼먹지 말자.
-			left = 0;
-			right = N;
-			
-			while(left<right) {
-				int mid = (left+right)/2;
-				
-				if(arr[mid]<=end) {
-					left= mid+1;
-				}else right=mid;				
-			}
-			int upper = left;
-
-            sb.append(upper - lower).append(" ");
-			
+			sb.append(ans).append("\n");
 		}
-		
-        System.out.println(sb);
+		System.out.println(sb);
+	}
+	static int findLeft(int target) {
+	    int left = 0;
+	    int right = N; // N까지
+
+	    while (left < right) {
+	        int mid = (left + right) / 2;
+
+	        if (arr[mid] >= target) {
+	            right = mid;
+	        } else {
+	            left = mid + 1;
+	        }
+	    }
+	    return left;
+	}
+	static int findRight(int target) {
+	    int left = 0;
+	    int right = N;
+
+	    while (left < right) {
+	        int mid = (left + right) / 2;
+
+	        if (arr[mid] > target) {
+	            right = mid;//mid가 정답일 수도 있음.그래서 mid-1이 아니라 mid.
+	        } else {
+	            left = mid + 1;
+	        }
+	    }
+	    return left;
 	}
 }
