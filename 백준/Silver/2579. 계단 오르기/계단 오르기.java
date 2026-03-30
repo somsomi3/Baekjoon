@@ -2,34 +2,30 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		int N = Integer.parseInt(br.readLine());
+		
+		int[] arr = new int[N+1];
+		int[] dp = new int[N+1];
+		for(int i = 1; i<= N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+			
+		}
+		
+		dp[1]= arr[1];
+//		dp[2]= arr[1]+ arr[2]; //=> 이건 N이 1일 때 터짐 (ArrayIndexOutOfBounds)
 
-        int[] stair = new int[n + 1];
-        for (int i = 1; i <= n; i++) stair[i] = Integer.parseInt(br.readLine());
 
-        if (n == 1) { 
-            System.out.println(stair[1]); 
-            return; 
-        }
-        if (n == 2) { 
-            System.out.println(stair[1] + stair[2]); 
-            return; 
-        }
-
-        int[] dp = new int[n + 1];
-        dp[1] = stair[1];
-        dp[2] = stair[1] + stair[2];
-        dp[3] = Math.max(stair[1] + stair[3], stair[2] + stair[3]);
-
-        for (int i = 4; i <= n; i++) {
-            dp[i] = Math.max(
-                dp[i - 2] + stair[i],
-                dp[i - 3] + stair[i - 1] + stair[i]
-            );
-        }
-
-        System.out.println(dp[n]);
-    }
+		if (N >= 2) {
+		    dp[2] = arr[1] + arr[2];
+		}
+		
+		for(int i = 3; i<=N; i++) {
+			dp[i] = Math.max(dp[i-3]+arr[i-1]+arr[i], dp[i-2]+arr[i]);
+		}
+		
+		System.out.println(dp[N]);
+	}
 }
