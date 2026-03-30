@@ -2,46 +2,53 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int N, M; 
+	static int K, N;
 	static int[] arr;
 	
 	public static void main(String[] args)throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
+		K = Integer.parseInt(st.nextToken());
 		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
 		
-		arr= new int[N];
+		arr= new int[K];
 		
 		int max = 0;
-		for(int i = 0; i <N; i++) {//long으로 입력 받아야 하나? 2의 32승은 얼마지?
+		for(int i = 0; i<K; i++) {
 			arr[i] = Integer.parseInt(br.readLine());
 			max = Math.max(max, arr[i]);
 		}
+		//정렬 필요없음. 배열안의 값을 보는 것이 아님.
+		long left = 1;
+		long right = max;
 		
-        long left = 1;
-        long right = max;
-        long ans = 0;
-
-        while(left <= right) {
-            long mid = (left + right) / 2;
+		long ans = 0;
+		
+		while(left<=right) {
+			//값을 찾는다. 
+			long mid = (left+right)/2;
 			
-			if(canCut(mid)>= M) {
+			if(canCut(mid)>= N) {
 				ans = mid;
 				left = mid+1;
 			}else {
 				right = mid -1;
 			}
+			
 		}
 		System.out.println(ans);
 		
+		
 	}
-    static long canCut(long target) {
-        long sum = 0;
-		for(int i = 0; i<N; i++) {
-            sum += arr[i]/ target;
-        }
+	static long canCut(long target) {
+		long sum = 0;
+		
+		for(int i = 0; i<K; i++) {
+			if(arr[i]>=target) {
+				sum += arr[i]/target;
+			}
+		}
 		return sum;
 	}
 }
