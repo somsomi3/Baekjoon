@@ -12,24 +12,23 @@ public class Main {
 		
 		HashSet<String> set = new HashSet<>();
 		
-		for(int i = 0; i < N; i++) {
+		for(int i = 0; i<N; i++) {
 			String s = br.readLine();
-		
 			set.add(s);
 		}
 		
-		List<String> list = new ArrayList<>();
+		List<String>list = new ArrayList<>();
 		
 		for(int i = 0; i<M; i++) {
 			String t = br.readLine();
-			if(set.contains(t))list.add(t);
+			if(set.contains(t)) {
+				list.add(t);
+			}
 		}
-		
-		sb.append(list.size()).append("\n");
 		
 		list.sort((a, b)-> a.compareTo(b));
 		
-		//list 안에 있는거 어떻게 꺼내지..?
+		sb.append(list.size()).append("\n");
 		
 		for(int i = 0; i<list.size(); i++) {
 			sb.append(list.get(i)).append("\n");
