@@ -1,57 +1,66 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    static final int OFFSET = 10_000_000;
-    static final int SIZE = 20_000_001;
-    static final InputStream in = System.in;
-    static final byte[] buf = new byte[1 << 16];
-    static int ptr = 0, len = 0;
+	static int N, M; 
+	static int[] arr;
+	public static void main(String[] args)throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		N = Integer.parseInt(br.readLine());
+		
+		arr = new int[N];
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for(int i = 0; i<N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+		
+		Arrays.sort(arr);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		M = Integer.parseInt(br.readLine());
+		st = new StringTokenizer(br.readLine());
+		for(int i = 0; i<M; i++) {
+			int x = Integer.parseInt(st.nextToken());
+			
+			int l = findLeft(x);
+			int r = findRight(x);
+			
+			int ans = r-l;
+			
+			sb.append(ans).append(" ");
+		}
+		System.out.println(sb);
+	}
+	static int findLeft(int target) {
+	    int left = 0;
+	    int right = N; // N까지
 
-    public static void main(String[] args) throws IOException {
-        int N = nextInt();
-        int[] count = new int[SIZE];
+	    while (left < right) {
+	        int mid = (left + right) / 2;
 
-        for (int i = 0; i < N; i++) {
-            int num = nextInt();
-            count[num + OFFSET]++;
-        }
+	        if (arr[mid] >= target) {
+	            right = mid;
+	        } else {
+	            left = mid + 1;
+	        }
+	    }
+	    return left;
+	}
+	static int findRight(int target) {
+	    int left = 0;
+	    int right = N;
 
-        int M = nextInt();
-        StringBuilder sb = new StringBuilder();
+	    while (left < right) {
+	        int mid = (left + right) / 2;
 
-        for (int i = 0; i < M; i++) {
-            int query = nextInt();
-            sb.append(count[query + OFFSET]).append(' ');
-        }
-
-        System.out.println(sb);
-    }
-
-    static int read() throws IOException {
-        if (ptr >= len) {
-            len = in.read(buf);
-            ptr = 0;
-            if (len <= 0) return -1;
-        }
-        return buf[ptr++];
-    }
-
-    static int nextInt() throws IOException {
-        int c, sign = 1, val = 0;
-        do {
-            c = read();
-        } while (c <= 32);
-
-        if (c == '-') {
-            sign = -1;
-            c = read();
-        }
-
-        while (c >= '0' && c <= '9') {
-            val = (val << 3) + (val << 1) + (c & 15); // val*10 + (c-'0')
-            c = read();
-        }
-
-        return val * sign;
-    }
+	        if (arr[mid] > target) {
+	            right = mid;//mid가 정답일 수도 있음.그래서 mid-1이 아니라 mid.
+	        } else {
+	            left = mid + 1;
+	        }
+	    }
+	    return left;
+	}
 }
