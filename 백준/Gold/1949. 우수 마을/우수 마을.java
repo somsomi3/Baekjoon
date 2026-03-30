@@ -2,59 +2,52 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N;
-    static int[] population;
-    static List<Integer>[] graph;
+
+    static ArrayList<Integer>[] graph;
     static int[][] dp;
+    static int[] people;
     static boolean[] visited;
 
     public static void main(String[] args) throws Exception {
-        N = read();
-
-        population = new int[N + 1];
-        for (int i = 1; i <= N; i++) population[i] = read();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
         graph = new ArrayList[N + 1];
+        dp = new int[N + 1][2];
+        people = new int[N + 1];
+        visited = new boolean[N + 1];
+
         for (int i = 1; i <= N; i++) graph[i] = new ArrayList<>();
 
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 1; i <= N; i++) people[i] = Integer.parseInt(st.nextToken());
+
         for (int i = 0; i < N - 1; i++) {
-            int a = read();
-            int b = read();
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
             graph[a].add(b);
             graph[b].add(a);
         }
 
-        dp = new int[N + 1][2];
-        visited = new boolean[N + 1];
-
         dfs(1);
+
         System.out.println(Math.max(dp[1][0], dp[1][1]));
     }
 
-    static void dfs(int now) {
-        visited[now] = true;
-        dp[now][0] = 0;
-        dp[now][1] = population[now];
+    static void dfs(int cur) {
+        visited[cur] = true;
 
-        for (int next : graph[now]) {
+        dp[cur][1] = people[cur];  // cur가 우수마을인 경우
+        dp[cur][0] = 0;            // cur가 우수마을이 아닌 경우
+
+        for (int next : graph[cur]) {
             if (!visited[next]) {
                 dfs(next);
-                dp[now][0] += Math.max(dp[next][0], dp[next][1]);
-                dp[now][1] += dp[next][0];
+
+                dp[cur][0] += Math.max(dp[next][0], dp[next][1]);
+                dp[cur][1] += dp[next][0];
             }
         }
-    }
-
-    static int read() throws Exception {
-        int c, n = 0;
-        boolean neg = false;
-        while ((c = System.in.read()) <= 32);
-        if (c == '-') {
-            neg = true;
-            c = System.in.read();
-        }
-        do n = n * 10 + c - '0';
-        while ((c = System.in.read()) > 32);
-        return neg ? -n : n;
     }
 }
