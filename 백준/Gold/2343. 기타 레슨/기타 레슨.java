@@ -41,11 +41,9 @@ public class Main {
 	}
 	static int canMake(int target) {
 		int s = 0;
-		int xx = 0;
 		int cnt = 1;
 		for(int i = 0; i<N; i++) {
 			s+= arr[i];
-			xx= arr[i];
 			
 			if(s>target) {
 				cnt++;
