@@ -7,7 +7,7 @@ class Solution {
         
         Set<Integer> set = new HashSet<>();
         
-        Arrays.sort(numbers);
+        // Arrays.sort(numbers);
         
         for(int i = 0; i<numbers.length; i++){
             for(int j =i+1; j<numbers.length; j++){
