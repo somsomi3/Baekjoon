@@ -9,13 +9,17 @@ class Solution {
         int[] dy = {0, 0, 1, -1};
 
         boolean[][] visited = new boolean[n][m];
+        int[][] dist = new int[n][m];
+
         Queue<int[]> q = new LinkedList<>();
 
         q.add(new int[]{0, 0});
         visited[0][0] = true;
+        dist[0][0] = 1;
 
         while (!q.isEmpty()) {
             int[] cur = q.poll();
+
             int x = cur[0];
             int y = cur[1];
 
@@ -27,12 +31,16 @@ class Solution {
                 if (maps[nx][ny] == 0 || visited[nx][ny]) continue;
 
                 visited[nx][ny] = true;
-                maps[nx][ny] = maps[x][y] + 1;
+                dist[nx][ny] = dist[x][y] + 1;
+
                 q.add(new int[]{nx, ny});
             }
         }
 
-        int ans = maps[n - 1][m - 1];
-        return ans == 1 ? -1 : ans;
+        if (dist[n - 1][m - 1] == 0) {
+            return -1;
+        }
+
+        return dist[n - 1][m - 1];
     }
 }
