@@ -1,46 +1,38 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    static void union(int a, int b){
-        int rootA = find(a);
-        int rootB = find(b);
-        if(rootA!= rootB){
-            parent[rootB] = rootA;
+
+    boolean[] visited;
+
+    public int solution(int n, int[][] computers) {
+
+        visited = new boolean[n];
+
+        int answer = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                bfs(i, computers);
+                answer++;
             }
         }
+        return answer;
+    }
 
-        static int find(int x){
-            if(parent[x]==x)return x;
-            return parent[x] = find(parent[x]);
-        }
-        static int[] parent;
+    void bfs(int start, int[][] computers) {
+        Queue<Integer> q = new ArrayDeque<>();
+        q.offer(start);
+        visited[start] = true;
 
-        static boolean[] visited;
-        public int solution(int n, int[][] computers) {
-
-
-            parent = new int[n+1];
-            for(int i = 1; i<=n; i++)parent[i] = i;
-
-            visited = new boolean[n+1];
-
-            for(int i = 0; i<n; i++){
-                for(int j = 0; j<n; j++){
-                    if(computers[i][j]==1){
-                    if(find(i)!= find(j)){
-                        union(i, j);
-                        }
-                    }
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            
+            for (int next = 0; next < computers.length; next++) {
+                if (computers[cur][next] == 1 && !visited[next]) {
+                    visited[next] = true;
+                    q.offer(next);
                 }
             }
-            int x = find(1);
-
-            Set<Integer> set = new HashSet<>();
-            for(int i = 0; i < n; i++){
-                set.add(find(i));
-            }
-
-            return set.size();
         }
     }
+}
