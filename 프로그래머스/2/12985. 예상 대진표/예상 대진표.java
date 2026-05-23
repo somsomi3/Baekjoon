@@ -1,0 +1,18 @@
+class Solution {
+    public int solution(int n, int a, int b) {
+
+        int answer = 1;
+
+        while (true) {
+
+            a = (a + 1) / 2;
+            b = (b + 1) / 2;
+
+            if (Math.abs(a - b) == 0) {
+                return answer;
+            }
+
+            answer++;
+        }
+    }
+}
