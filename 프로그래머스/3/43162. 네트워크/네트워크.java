@@ -1,42 +1,42 @@
-//1. union find풀이
+// 2. BFS
 import java.io.*;
 import java.util.*;
 
 class Solution {
-    static int[] parent;
-    
-    static void union(int a, int b){
-        int rootA = find(a);
-        int rootB = find(b);
-        if(rootA!= rootB) parent[rootB] = rootA;
-    }
-    static int find(int x){
-        if(parent[x] ==x)return x;
-        return parent[x] = find(parent[x]);
-    }
+//격자가 아닌 그래프BFS유형입니다. 그래서 방향벡터 필요없음.
+    static boolean[] visited;
     
     public int solution(int n, int[][] computers) {
         
-        parent = new int[n];
+        visited = new boolean[n];
+        int answer = 0;
         
-        for(int i = 0; i< n; i++)parent[i] = i;
-        
-        for(int i = 0; i< n; i++){
-            for(int j = i+1; j <n; j++){
-                if(computers[i][j]==1){
-                    union(i, j);
-                }
+        for(int i = 0; i<n; i++){
+            if(!visited[i]){
+                bfs(i, computers);
+                answer++;
             }
         }
         
-        //같은 부모 = 같은 그룹
-        HashSet<Integer> set = new HashSet<>();
-        
-        for(int i = 0; i<n; i++){
-            set.add(find(i));
-        }
-        
-        int answer = set.size();
         return answer;
+    }
+    
+    public void bfs(int start, int[][] computers){
+        Queue<Integer> q = new ArrayDeque<>();
+        
+        q.offer(start);
+        visited[start] = true;
+        
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            
+            for(int next =0; next< computers.length; next++){
+                if(computers[cur][next] ==1 && !visited[next]){
+                    
+                    visited[next] = true;
+                    q.offer(next);
+                }
+            }
+        }
     }
 }
