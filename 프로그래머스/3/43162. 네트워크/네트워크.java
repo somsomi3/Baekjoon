@@ -1,42 +1,32 @@
-// 2. BFS
+// 3. dfs
 import java.io.*;
 import java.util.*;
 
 class Solution {
-//격자가 아닌 그래프BFS유형입니다. 그래서 방향벡터 필요없음.
+    
     static boolean[] visited;
     
     public int solution(int n, int[][] computers) {
-        
-        visited = new boolean[n];
         int answer = 0;
+        visited = new boolean[n];
         
-        for(int i = 0; i<n; i++){
+        for(int  i = 0; i < n; i++){
             if(!visited[i]){
-                bfs(i, computers);
+                dfs(i, computers);
                 answer++;
             }
         }
         
         return answer;
     }
-    
-    public void bfs(int start, int[][] computers){
-        Queue<Integer> q = new ArrayDeque<>();
+    public void dfs(int cur, int[][] computers){
+        //얘도 queue인가?
+
+        visited[cur] = true;
         
-        q.offer(start);
-        visited[start] = true;
-        
-        while(!q.isEmpty()){
-            int cur = q.poll();
-            
-            for(int next =0; next< computers.length; next++){
-                if(computers[cur][next] ==1 && !visited[next]){
-                    
-                    visited[next] = true;
-                    q.offer(next);
-                }
-            }
+        for(int next = 0; next <computers.length; next++){
+            if(computers[cur][next] ==1 && !visited[next]) 
+                dfs(next, computers);
         }
     }
 }
