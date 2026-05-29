@@ -1,18 +1,32 @@
-class Solution {
-    static int cnt = 0;
+import java.io.*;
+import java.util.*;
+
+class Solution {    
+    //함수를 위한 전역변수
+    int answer = 0;
+    int[] numbers;
+    int target;
     
-    public int solution(int[] arr, int t) {
-        dfs(arr, t, 0, 0);
-        return cnt;
+    public int solution(int[] numbers, int target) {
+        this.numbers = numbers;
+        this.target = target;
+        
+        dfs(0, 0);
+        
+        return answer;
     }
-    
-    static void dfs(int[] arr, int t, int idx, int sum) {
-        if (idx == arr.length) {
-            if (sum == t) cnt++;
+    public void dfs(int idx, int sum){
+        
+        if(idx == numbers.length){
+            if(sum ==target){
+                answer++;
+            }
             return;
         }
         
-        dfs(arr, t, idx + 1, sum + arr[idx]);
-        dfs(arr, t, idx + 1, sum - arr[idx]);
+        dfs(idx +1, sum + numbers[idx]);
+        dfs(idx +1, sum - numbers[idx]);
+        
     }
+    
 }

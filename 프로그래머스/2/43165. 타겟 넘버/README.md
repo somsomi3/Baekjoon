@@ -1,10 +1,10 @@
 # [level 2] 타겟 넘버 - 43165 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/43165?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/43165?utm_source=chatgpt.com) 
 
 ### 성능 요약
 
-메모리: 89.2 MB, 시간: 7.36 ms
+메모리: 61.2 MB, 시간: 4.72 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 04월 22일 23:59:31
+2026년 05월 29일 16:16:41
 
 ### 문제 설명
 
