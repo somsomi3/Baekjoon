@@ -1,57 +1,50 @@
+import java.io.*;
+import java.util.*;
+
 class Solution {
-    // N, S, W, E 순서
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
-    
     public int[] solution(String[] park, String[] routes) {
-        int h = park.length;
-        int w = park[0].length();
         
-        int x = 0, y = 0;
+        int x = 0;
+        int y = 0;
         
-        // 시작 위치 찾기
-        for (int i = 0; i < h; i++) {
-            for (int j = 0; j < w; j++) {
-                if (park[i].charAt(j) == 'S') {
+        for(int i = 0; i< park.length; i++){
+            for(int j = 0; j < park[0].length(); j++){
+                if(park[i].charAt(j)== 'S'){
                     x = i;
                     y = j;
                 }
             }
         }
         
-        for (String r : routes) {
-            String[] parts = r.split(" ");
-            String dir = parts[0];
-            int dist = Integer.parseInt(parts[1]);
+        for(String r : routes){
+            String[] arr = r.split(" ");
             
-            int d = 0;
-            if (dir.equals("N")) d = 0;
-            else if (dir.equals("S")) d = 1;
-            else if (dir.equals("W")) d = 2;
-            else if (dir.equals("E")) d = 3;
+            char dir = arr[0].charAt(0);
+            int dist = Integer.parseInt(arr[1]);
             
             int nx = x;
             int ny = y;
-            boolean ok = true;
             
-            // 한 칸씩 이동 체크
-            for (int i = 0; i < dist; i++) {
-                nx += dx[d];
-                ny += dy[d];
-                
-                if (nx < 0 || ny < 0 || nx >= h || ny >= w 
-                    || park[nx].charAt(ny) == 'X') {
-                    ok = false;
+            boolean flag = true;
+            
+            for(int j = 1; j<=dist; j++){
+                if (dir == 'E') ny++;
+                else if (dir == 'W') ny--;
+                else if (dir == 'S') nx++;
+                else if (dir == 'N') nx--;
+
+                if (nx < 0 || nx >= park.length || ny < 0 || ny >= park[0].length() || park[nx].charAt(ny) == 'X') {
+                    flag = false;
                     break;
                 }
             }
-            
-            if (ok) {
+                
+            if (flag) {
                 x = nx;
                 y = ny;
             }
         }
-        
+
         return new int[]{x, y};
     }
 }
