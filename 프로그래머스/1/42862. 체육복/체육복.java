@@ -1,37 +1,60 @@
 import java.util.*;
+
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-
-        boolean[] has = new boolean[n + 1];
-        Arrays.fill(has, true);
-        for (int i : lost) has[i] = false;
 
         Arrays.sort(lost);
         Arrays.sort(reserve);
 
-        List<Integer> actualReserve = new ArrayList<>();
-        for (int r : reserve) {
-            if (!has[r]) {
-                has[r] = true; // 본인 입음
-            } else {
-                actualReserve.add(r); // 진짜 여분만 남김
+        boolean[] used = new boolean[reserve.length];
+
+        int answer = n - lost.length;
+
+        for (int i = 0; i < lost.length; i++) {
+
+            int student = lost[i];
+
+            for (int j = 0; j < reserve.length; j++) {
+
+                if (used[j]) continue;
+
+                if (reserve[j] == student) {
+                    used[j] = true;
+                    answer++;
+                    break;
+                }
             }
         }
 
-        for (int r : actualReserve) {
-            if (r - 1 >= 1 && !has[r - 1]) {
-                has[r - 1] = true;
-            } else if (r + 1 <= n && !has[r + 1]) {
-                has[r + 1] = true;
+        for (int i = 0; i < lost.length; i++) {
+
+            int student = lost[i];
+
+            boolean alreadyHas = false;
+
+            for (int j = 0; j < reserve.length; j++) {
+                if (used[j] && reserve[j] == student) {
+                    alreadyHas = true;
+                    break;
+                }
+            }
+
+            if (alreadyHas) continue;
+
+            for (int j = 0; j < reserve.length; j++) {
+
+                if (used[j]) continue;
+
+                if (reserve[j] == student - 1 ||
+                    reserve[j] == student + 1) {
+
+                    used[j] = true;
+                    answer++;
+                    break;
+                }
             }
         }
 
-
-        int count = 0;
-        for (int i = 1; i <= n; i++) {
-            if (has[i]) count++;
-        }
-
-        return count;
+        return answer;
     }
 }
