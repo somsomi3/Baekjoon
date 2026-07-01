@@ -7,15 +7,17 @@ class Solution {
         
         Arrays.sort(d);
         
-
-        for(int i = 0; i<d.length; i++){
-            if(budget - d[i]>=0){
-                answer++;
-                budget -= d[i];
-            }else break;
+        int sum = 0;
+        for(int i = 0; i< d.length; i++){
+            sum += d[i];
+            answer++;
+            if(sum == budget){
+                break;
+            }else if(sum > budget){
+                answer--;
+                break;
+            }
         }
-
-        
         
         return answer;
     }
