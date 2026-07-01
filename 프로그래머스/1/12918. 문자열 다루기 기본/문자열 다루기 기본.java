@@ -1,22 +1,23 @@
+import java.io.*;
+import java.util.*;
+
 class Solution {
     public boolean solution(String s) {
-        int len = s.length();
+        boolean answer = true;
         
-        boolean answer = false;
-        int count=0;
-        if(len==4||len==6){
-            for(int i=0; i<10; i++){
-                for(int j=0; j<len; j++){
-                    if(i==s.charAt(j)-'0'){
-                        count++;
-                    }
-                }
-
+        if (s.length() != 4 && s.length() != 6) {
+            return false;
+        }
+        
+        for(int i = 0; i< s.length(); i++){
+            char x = s.charAt(i);
+            
+            if(!Character.isDigit(x)){
+                answer = false;
+                break;
             }
         }
-        if(count==len){
-             answer = true;
-        }
+        
         return answer;
     }
 }
