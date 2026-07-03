@@ -1,31 +1,25 @@
 import java.io.*;
 import java.util.*;
 
-class Solution {    
-    //함수를 위한 전역변수
-    int answer = 0;
-    int[] numbers;
-    int target;
-    
+class Solution {
+    public int count = 0;
     public int solution(int[] numbers, int target) {
-        this.numbers = numbers;
-        this.target = target;
-        
-        dfs(0, 0);
-        
-        return answer;
+        dfs(numbers, target, 0, 0);
+        return count;
     }
-    public void dfs(int idx, int sum){
-        
-        if(idx == numbers.length){
-            if(sum ==target){
-                answer++;
+    public void dfs(int[] numbers, int target, int index, int sum) {
+        // 종료 조건
+        if (index == numbers.length) {
+
+            if (sum == target) {
+                count++;
             }
+
             return;
         }
-        
-        dfs(idx +1, sum + numbers[idx]);
-        dfs(idx +1, sum - numbers[idx]);
+
+        dfs(numbers, target, index + 1, sum + numbers[index]);
+        dfs(numbers, target, index + 1, sum - numbers[index]);
         
     }
     
