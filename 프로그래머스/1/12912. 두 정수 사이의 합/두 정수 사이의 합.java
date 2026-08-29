@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.*;
+
 class Solution {
     public long solution(int a, int b) {
         long answer = 0;
@@ -5,9 +8,10 @@ class Solution {
         int x = Math.min(a, b);
         int y = Math.max(a, b);
         
-        for(int i = x; i<=y ; i++){
-            answer += i;
+        for(int i = x; i <= y; i++){
+            answer+= i;
         }
+        
         return answer;
     }
 }
