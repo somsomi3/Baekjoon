@@ -1,25 +1,29 @@
+import java.io.*;
+import java.util.*;
+
 class Solution {
     boolean solution(String s) {
-        boolean answer = true;
-        int len = s.length();
-        int countp = 0;
-        int county = 0;
-        for(int i=0; i<len; i++){
-            char x = s.charAt(i);
-            if (x == 'P' || x == 'p') {
-                countp++;
-            } else if (x == 'Y' || x == 'y') {
-                county++;
+        boolean answer = false;
+        
+        int pCount = 0;
+        int yCount = 0;
+        
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            // Character.isUpperCase(c);
+            c = Character.toUpperCase(c);
+            if(c == 'P'){
+                pCount++;
+            }else if(c =='Y'){
+                yCount++;
             }
         }
-        if(countp==county){
+        
+        // if(pCount==yCount || pCount==0 && yCount==0 ){
+        if(pCount==yCount){
             answer = true;
-        }else{
-            answer = false;
         }
 
-
-        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
         return answer;
     }
 }
