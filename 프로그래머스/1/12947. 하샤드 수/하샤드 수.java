@@ -3,17 +3,19 @@ import java.util.*;
 
 class Solution {
     public boolean solution(int x) {
-        boolean answer = true;
-        int sum= 0;
-        int test = x;
-        while(test >0){
-            sum += test%10;
-            test /=10;
-        }
+        boolean answer = false;
         
-        if(x % sum == 0){
+        int one = x;
+        int sum = 0;
+        while(x >0){
+            
+            int namuge = x % 10;
+            sum += namuge;
+            x = x/10;
+        }
+        if(one%sum ==0){
             answer = true;
-        }else answer = false;
+        }
         
         return answer;
     }
