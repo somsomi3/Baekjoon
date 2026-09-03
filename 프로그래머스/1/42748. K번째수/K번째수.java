@@ -1,29 +1,25 @@
-import java.io.*;
 import java.util.*;
 
 class Solution {
     public int[] solution(int[] array, int[][] commands) {
         int[] answer = new int[commands.length];
-        
-        for(int x= 0; x<commands.length; x++){
-
-
+        int xx = 0;
+        for(int x = 0; x < commands.length; x++){
             int i = commands[x][0];
             int j = commands[x][1];
-            int target = commands[x][2];
-
-            int[] ranges = new int[j-i+1];
-
-            int index = 0;
-            for (int z = i - 1; z < j; z++) {
-                ranges[index] = array[z];
-                index++;
-            }
+            int k = commands[x][2];
             
-            Arrays.sort(ranges);
-
-            answer[x] = ranges[target-1];
+            int[] mid = new int[j-i+1];
+            int dd = 0;
+            for(int y = i-1; y<j ; y++){
+                mid[dd] = array[y];
+                dd++;
+            }
+            Arrays.sort(mid);
+            answer[xx] = mid[k-1];
+            xx++;
         }
+        
         return answer;
     }
 }
