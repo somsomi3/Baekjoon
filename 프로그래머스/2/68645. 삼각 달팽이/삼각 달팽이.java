@@ -9,9 +9,9 @@ class Solution {
         int num = 1;
         for (int i = 0; i < n; i++) {
             for (int j = i; j < n; j++) {
-                if (i % 3 == 0) {
+                if (i%3 == 0) {
                     x++;
-                } else if (i % 3 == 1) {
+                } else if (i%3 == 1) {
                     y++;
                 } else {
                     x--;
@@ -21,11 +21,11 @@ class Solution {
             }
         }
         int[] answer = new int[n * (n + 1) / 2];
-        int aa = 0;
+        int abc = 0;
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j <= i; j++) {
-                answer[aa++] = arr[i][j];
+                answer[abc++] = arr[i][j];
             }
         }
         return answer;
